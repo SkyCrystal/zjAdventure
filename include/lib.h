@@ -1,1 +1,1 @@
-void test();
+__declspec(dllexport) void test();
