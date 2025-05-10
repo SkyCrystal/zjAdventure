@@ -14,6 +14,7 @@ GAME_API Game::~Game() {
 }
 
 GAME_API void Game::update() {
+  gameData.playerExperience += 1;
   if (currentState != GameState::PLAYING) {
     return;
   }

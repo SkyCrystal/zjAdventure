@@ -18,9 +18,28 @@ int main() {
     return page.render();
   });
 
+  // 添加静态文件服务
+  CROW_ROUTE(app, "/js/<path>")
+  ([](const std::string& path) {
+    std::ifstream file("js/" + path);
+    if (!file.is_open()) {
+      return crow::response(404);
+    }
+    std::string content((std::istreambuf_iterator<char>(file)),
+                        std::istreambuf_iterator<char>());
+    return crow::response(content);
+  });
+
   // API端点：获取游戏状态
   CROW_ROUTE(app, "/api/game-state")
   ([&game]() { return crow::response(game.getGameStateJson().dump()); });
+
+  // API端点：更新游戏状态
+  CROW_ROUTE(app, "/api/update")
+  ([&game]() {
+    game.update();
+    return crow::response(200);
+  });
 
 // 使用系统默认浏览器打开网页
 #ifdef _WIN32

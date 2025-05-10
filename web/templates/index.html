@@ -51,27 +51,10 @@
                 <div id="health-bar" class="health-bar" style="width: 100%"></div>
             </div>
         </div>
+        <div>
+            <button onclick="updateGame()" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">经验+1</button>
+        </div>
     </div>
-
-    <script>
-        function updateGameState() {
-            fetch('/api/game-state')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('player-level').textContent = data.player.level;
-                    document.getElementById('player-exp').textContent = data.player.experience;
-                    document.getElementById('player-health').textContent = data.player.health;
-                    document.getElementById('player-max-health').textContent = data.player.maxHealth;
-                    
-                    const healthPercentage = (data.player.health / data.player.maxHealth) * 100;
-                    document.getElementById('health-bar').style.width = `${healthPercentage}%`;
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        // 每秒更新一次游戏状态
-        setInterval(updateGameState, 1000);
-        updateGameState(); // 立即更新一次
-    </script>
+    <script src="/js/game.js"></script>
 </body>
 </html> 
