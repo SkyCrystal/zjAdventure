@@ -22,6 +22,15 @@ int main() {
   CROW_ROUTE(app, "/api/game-state")
   ([&game]() { return crow::response(game.getGameStateJson().dump()); });
 
+// 使用系统默认浏览器打开网页
+#ifdef _WIN32
+  system("start http://localhost:8080");
+#elif __APPLE__
+  system("open http://localhost:8080");
+#else
+  system("xdg-open http://localhost:8080");
+#endif
+
   // 启动服务器
   app.port(8080).multithreaded().run();
 
