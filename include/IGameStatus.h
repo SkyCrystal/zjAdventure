@@ -1,3 +1,4 @@
+#pragma once
 // 获取游戏状态相关 比如当前关卡等级/回合数
 #include <vector>
 

@@ -1,3 +1,4 @@
+#pragma once
 // 目标选择器
 #include <vector>
 

@@ -1,3 +1,4 @@
+#pragma once
 // 角色应当具有的基本能力
 class ICharacter {
  public:

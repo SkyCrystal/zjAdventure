@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>回合制Roguelike游戏</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        #game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+        }
+        #player-stats {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+        .stat-bar {
+            height: 20px;
+            background-color: #444;
+            border-radius: 10px;
+            margin: 5px 0;
+        }
+        .health-bar {
+            background-color: #4CAF50;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>回合制Roguelike游戏</h1>
+        <div id="player-stats">
+            <h2>玩家状态</h2>
+            <div>等级: <span id="player-level">1</span></div>
+            <div>经验值: <span id="player-exp">0</span></div>
+            <div>生命值: <span id="player-health">100</span>/<span id="player-max-health">100</span></div>
+            <div class="stat-bar">
+                <div id="health-bar" class="health-bar" style="width: 100%"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateGameState() {
+            fetch('/api/game-state')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('player-level').textContent = data.player.level;
+                    document.getElementById('player-exp').textContent = data.player.experience;
+                    document.getElementById('player-health').textContent = data.player.health;
+                    document.getElementById('player-max-health').textContent = data.player.maxHealth;
+                    
+                    const healthPercentage = (data.player.health / data.player.maxHealth) * 100;
+                    document.getElementById('health-bar').style.width = `${healthPercentage}%`;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // 每秒更新一次游戏状态
+        setInterval(updateGameState, 1000);
+        updateGameState(); // 立即更新一次
+    </script>
+</body>
+</html> 

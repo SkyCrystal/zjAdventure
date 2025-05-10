@@ -1,3 +1,4 @@
+#pragma once
 // 各种动作
 class IAction {
  public:
