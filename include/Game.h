@@ -24,7 +24,7 @@ class GAME_API Game {
   // 获取游戏数据的JSON表示
   nlohmann::json getGameStateJson() const;
 
- private:
+ protected:
   GameState currentState;
   int turnCount;
   bool isPlayerTurn;

@@ -1,12 +1,13 @@
 #pragma once
 // 目标选择器
+#include <memory>
 #include <vector>
 
-class ICharacter;
+class ISelectableTarget;
 
 class ITargetSelector {
  public:
   virtual ~ITargetSelector() = default;
 
-  virtual std::vector<ICharacter*> selectTargets() const = 0;
+  virtual std::vector<std::weak_ptr<ISelectableTarget>> getTargets() const = 0;
 };

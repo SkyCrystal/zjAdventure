@@ -1,9 +1,27 @@
 #pragma once
 // 角色应当具有的基本能力
-class ICharacter {
+#include <memory>
+#include <vector>
+
+#include "IReactiable.h"
+#include "ISelectableTarget.h"
+
+class IItem;
+
+class ICharacter : public IReactiable, public ISelectableTarget {
  public:
+  ICharacter() : ISelectableTarget(TargetType::CHARACTER) {}
   virtual ~ICharacter() = default;
-  virtual int getHealth() const = 0;
-  virtual int getAttackPower() const = 0;
-  virtual int getDefensePower() const = 0;
+  int getHealth() const { return health_; }
+  int getAttackPower() const { return attackPower_; }
+  int getDefensePower() const { return defensePower_; }
+  virtual bool isEnemy() const = 0;
+
+ protected:
+  int health_;
+  int attackPower_;
+  int defensePower_;
+  bool isEnemy_;
+
+  std::vector<std::unique_ptr<IItem>> items_;
 };
