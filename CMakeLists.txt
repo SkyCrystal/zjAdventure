@@ -34,4 +34,4 @@ target_link_libraries(zjAdventure PRIVATE
 add_subdirectory(src)
 
 # 复制前端文件到输出目录
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/web DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/templates DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug)

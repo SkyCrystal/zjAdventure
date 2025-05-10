@@ -5,7 +5,7 @@
 #include "Game.h"
 
 int main() {
-  //创建游戏实例
+  // 创建游戏实例
   Game game;
 
   // 创建Crow应用
@@ -13,7 +13,10 @@ int main() {
 
   // 设置静态文件服务
   CROW_ROUTE(app, "/")
-  ([]() { return crow::response(200, "ok"); });
+  ([]() {
+    auto page = crow::mustache::load("index.html");
+    return page.render();
+  });
 
   // API端点：获取游戏状态
   CROW_ROUTE(app, "/api/game-state")
