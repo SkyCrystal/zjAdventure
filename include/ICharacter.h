@@ -23,5 +23,5 @@ class ICharacter : public IReactiable, public ISelectableTarget {
   int defensePower_;
   bool isEnemy_;
 
-  std::vector<std::unique_ptr<IItem>> items_;
+  std::vector<std::shared_ptr<IItem>> items_;
 };

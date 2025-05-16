@@ -5,36 +5,42 @@
 #include <string>
 #include <vector>
 
+#include "IGameService.h"
 #include "dllexport.h"
 
-class GAME_API Game {
+class GAME_API Game : public IGameService {
  public:
   Game();
   ~Game();
 
-  // 游戏状态
+  int getCurrentLevel() const override;
+  int getCurrentRound() const override;
+  std::vector<std::weak_ptr<ICharacter>> getCurrentCharacters() const override;
+  std::weak_ptr<ICharacter> getFirstEnemy(
+      const std::weak_ptr<ICharacter>& me) const override;
+
   enum class GameState { MENU, PLAYING, PAUSED, GAME_OVER };
 
-  // 游戏主循环
   void update();
 
-  // 获取游戏状态
   GameState getState() const { return currentState; }
 
-  // 获取游戏数据的JSON表示
   nlohmann::json getGameStateJson() const;
 
  protected:
+  std::vector<std::shared_ptr<ICharacter>> currentCharacters;
+  std::weak_ptr<ICharacter> currentEnemy;
+  std::weak_ptr<ICharacter> currentPlayer;
+
   GameState currentState;
   int turnCount;
   bool isPlayerTurn;
 
-  // 游戏数据
   struct GameData {
     int playerHealth;
     int playerMaxHealth;
     int playerLevel;
     int playerExperience;
-    // 可以添加更多游戏数据
+
   } gameData;
 };

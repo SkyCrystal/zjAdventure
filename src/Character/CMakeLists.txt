@@ -2,9 +2,12 @@
 cmake_minimum_required(VERSION 3.16)
 
 # 定义项目名称和版本
-project(Character VERSION 1.0)
+project(Character VERSION 1.0 LANGUAGES CXX)
 
-add_library(${PROJECT_NAME} STATIC Character.cpp)
+file(GLOB_RECURSE CHARACTER_SOURCES "*.cpp")
+file(GLOB_RECURSE CHARACTER_HEADERS "*.h")
+
+add_library(${PROJECT_NAME} STATIC ${CHARACTER_SOURCES})
 
 find_package(nlohmann_json REQUIRED)
 

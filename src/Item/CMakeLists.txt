@@ -2,12 +2,12 @@
 cmake_minimum_required(VERSION 3.16)
 
 # 定义项目名称和版本
-project(Game VERSION 1.0 LANGUAGES CXX)
+project(Item VERSION 1.0 LANGUAGES CXX)
 
-file(GLOB_RECURSE GAME_SOURCES "*.cpp")
-file(GLOB_RECURSE GAME_HEADERS "*.h")
+file(GLOB_RECURSE ITEM_SOURCES "*.cpp")
+file(GLOB_RECURSE ITEM_HEADERS "*.h")
 
-add_library(${PROJECT_NAME} SHARED ${GAME_SOURCES})
+add_library(${PROJECT_NAME} SHARED ${ITEM_SOURCES})
 
 find_package(nlohmann_json REQUIRED)
 

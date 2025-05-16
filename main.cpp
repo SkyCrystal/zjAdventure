@@ -2,7 +2,7 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
-#include "Game.h"
+#include "src/Game/Game.h"
 
 int main() {
   // 创建游戏实例

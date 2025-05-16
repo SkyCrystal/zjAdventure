@@ -9,6 +9,6 @@ class IReactiable {
  public:
   virtual ~IReactiable() = default;
 
-  virtual std::vector<std::unique_ptr<IAction>> onAction(
-      std::unique_ptr<IAction> action) = 0;
+  virtual std::vector<std::shared_ptr<IAction>> onAction(
+      std::shared_ptr<IAction> action) = 0;
 };

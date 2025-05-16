@@ -1,5 +1,6 @@
 #pragma once
 
+#include <list>
 #include <memory>
 
 #include "ICharacter.h"
@@ -13,10 +14,11 @@ class Character : public ICharacter {
   ~Character() override;
 
   bool isEnemy() const override { return isEnemy_; }
-  std::vector<std::unique_ptr<IAction>> onAction(
-      std::unique_ptr<IAction> action) override;
+  std::vector<std::shared_ptr<IAction>> onAction(
+      std::shared_ptr<IAction> action) override;
 
   int getIndex() const override;
 
  private:
+  std::list<std::shared_ptr<IAction>> pending_actions_;
 };

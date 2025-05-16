@@ -1,4 +1,7 @@
 #include "Game.h"
+#include "GameService.h"
+#include "Utils.h"
+
 
 GAME_API Game::Game()
     : currentState(GameState::MENU), turnCount(0), isPlayerTurn(true) {
@@ -7,6 +10,7 @@ GAME_API Game::Game()
   gameData.playerMaxHealth = 100;
   gameData.playerLevel = 1;
   gameData.playerExperience = 0;
+  GameService::getInstance().AddGameService(this);
 }
 
 GAME_API Game::~Game() {
@@ -40,4 +44,28 @@ GAME_API nlohmann::json Game::getGameStateJson() const {
                  {"experience", gameData.playerExperience}};
 
   return j;
+}
+
+int Game::getCurrentLevel() const {
+  return 0;
+}
+
+int Game::getCurrentRound() const {
+  return 0;
+}
+
+std::vector<std::weak_ptr<ICharacter>> Game::getCurrentCharacters() const {
+  std::vector<std::weak_ptr<ICharacter>> result;
+  for (auto& character : currentCharacters) {
+    result.push_back(character);
+  }
+  return result;
+}
+
+std::weak_ptr<ICharacter> Game::getFirstEnemy(
+    const std::weak_ptr<ICharacter>& me) const {
+  if (is_different(currentEnemy, me)) {
+    return currentEnemy;
+  }
+  return currentPlayer;
 }
