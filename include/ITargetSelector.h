@@ -9,5 +9,6 @@ class ITargetSelector {
  public:
   virtual ~ITargetSelector() = default;
 
-  virtual std::vector<std::weak_ptr<ISelectableTarget>> getTargets() const = 0;
+  virtual std::vector<std::shared_ptr<ISelectableTarget>> getTargets()
+      const = 0;
 };

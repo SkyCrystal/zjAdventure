@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "GameService.h"
 
-#include "Action/NormalDamage.h"
+#include "Action/Damage/NormalDamage.h"
 
 #include "Util/Utils.h"
 
@@ -57,18 +57,18 @@ int Game::getCurrentRound() const {
   return 0;
 }
 
-std::vector<std::weak_ptr<ICharacter>> Game::getCurrentCharacters() const {
-  std::vector<std::weak_ptr<ICharacter>> result;
+std::vector<std::shared_ptr<ICharacter>> Game::getCurrentCharacters() const {
+  std::vector<std::shared_ptr<ICharacter>> result;
   for (auto& character : currentCharacters) {
     result.push_back(character);
   }
   return result;
 }
 
-std::weak_ptr<ICharacter> Game::getFirstEnemy(
-    const std::weak_ptr<ICharacter>& me) const {
+std::shared_ptr<ICharacter> Game::getFirstEnemy(
+    const std::shared_ptr<ICharacter>& me) const {
   if (is_different(currentEnemy, me)) {
-    return currentEnemy;
+    return currentEnemy.lock();
   }
-  return currentPlayer;
+  return currentPlayer.lock();
 }

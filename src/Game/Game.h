@@ -15,9 +15,10 @@ class GAME_API Game : public IGameService {
 
   int getCurrentLevel() const override;
   int getCurrentRound() const override;
-  std::vector<std::weak_ptr<ICharacter>> getCurrentCharacters() const override;
-  std::weak_ptr<ICharacter> getFirstEnemy(
-      const std::weak_ptr<ICharacter>& me) const override;
+  std::vector<std::shared_ptr<ICharacter>> getCurrentCharacters()
+      const override;
+  std::shared_ptr<ICharacter> getFirstEnemy(
+      const std::shared_ptr<ICharacter>& me) const override;
 
   enum class GameState { MENU, PLAYING, PAUSED, GAME_OVER };
 

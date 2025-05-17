@@ -4,20 +4,20 @@
 #include "IGameService.h"
 #include "IItem.h"
 
-std::weak_ptr<ICharacter> getOwner(std::weak_ptr<ISelectableTarget> target) {
-  switch (target.lock()->getTargetType()) {
+std::shared_ptr<ICharacter> getOwner(
+    std::shared_ptr<ISelectableTarget> target) {
+  switch (target->getTargetType()) {
     case TargetType::CHARACTER:
-      return std::dynamic_pointer_cast<ICharacter>(target.lock());
+      return std::dynamic_pointer_cast<ICharacter>(target);
     case TargetType::ITEM:
-      return getOwner(
-          std::dynamic_pointer_cast<IItem>(target.lock())->getOwner());
+      return getOwner(std::dynamic_pointer_cast<IItem>(target)->getOwner());
     default:
-      return std::weak_ptr<ICharacter>();
+      return std::shared_ptr<ICharacter>();
   }
 }
 
-std::vector<std::weak_ptr<ISelectableTarget>> TargetFirstEnemy::getTargets()
+std::vector<std::shared_ptr<ISelectableTarget>> TargetFirstEnemy::getTargets()
     const {
   return {GameServiceManager::getInstance().GetGameService()->getFirstEnemy(
-      getOwner(from_))};
+      getOwner(from_.lock()))};
 }

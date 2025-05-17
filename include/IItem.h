@@ -10,5 +10,5 @@ class IItem : public ISelectableTarget, public virtual IReactiable {
  public:
   IItem() : ISelectableTarget(TargetType::ITEM) {}
   virtual ~IItem() = default;
-  virtual std::weak_ptr<ISelectableTarget> getOwner() const = 0;
+  virtual std::shared_ptr<ISelectableTarget> getOwner() const = 0;
 };

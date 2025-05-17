@@ -10,8 +10,8 @@ class IGameService {
   virtual ~IGameService() = default;
   virtual int getCurrentLevel() const = 0;
   virtual int getCurrentRound() const = 0;
-  virtual std::vector<std::weak_ptr<ICharacter>> getCurrentCharacters()
+  virtual std::vector<std::shared_ptr<ICharacter>> getCurrentCharacters()
       const = 0;
-  virtual std::weak_ptr<ICharacter> getFirstEnemy(
-      const std::weak_ptr<ICharacter>& me) const = 0;
+  virtual std::shared_ptr<ICharacter> getFirstEnemy(
+      const std::shared_ptr<ICharacter>& me) const = 0;
 };

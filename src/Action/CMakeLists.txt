@@ -7,6 +7,7 @@ project(Action VERSION 1.0 LANGUAGES CXX)
 file(GLOB_RECURSE ACTION_SOURCES "*.cpp")
 file(GLOB_RECURSE ACTION_HEADERS "*.h")
 
+
 add_library(${PROJECT_NAME} STATIC ${ACTION_SOURCES})
 
 find_package(nlohmann_json REQUIRED)
