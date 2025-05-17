@@ -8,7 +8,7 @@
 
 class IItem;
 
-class ICharacter : public IReactiable, public ISelectableTarget {
+class ICharacter : public virtual IReactiable, public ISelectableTarget {
  public:
   ICharacter() : ISelectableTarget(TargetType::CHARACTER) {}
   virtual ~ICharacter() = default;

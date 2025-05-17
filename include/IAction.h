@@ -32,13 +32,13 @@ enum class ActionType {
 
 };
 
-class IAction : public ITargetSelector {
+class IAction : public virtual ITargetSelector {
  public:
   IAction(ActionType actionType, std::weak_ptr<ISelectableTarget> from)
       : actionType_(actionType), from_(from) {}
   virtual ~IAction() = default;
-  virtual void OnAction();
-  virtual ActionType GetType() const = 0;
+  virtual void OnAction() = 0;
+  virtual ActionType GetType() { return actionType_; }
 
  private:
   ActionType actionType_;

@@ -2,16 +2,20 @@
 cmake_minimum_required(VERSION 3.16)
 
 # 定义项目名称和版本
-project(Action  VERSION 1.0 LANGUAGES CXX)
+project(Action VERSION 1.0 LANGUAGES CXX)
 
 file(GLOB_RECURSE ACTION_SOURCES "*.cpp")
 file(GLOB_RECURSE ACTION_HEADERS "*.h")
 
-add_library(${PROJECT_NAME} SHARED ${ACTION_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${ACTION_SOURCES})
 
 find_package(nlohmann_json REQUIRED)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PUBLIC
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/include
+)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     nlohmann_json::nlohmann_json

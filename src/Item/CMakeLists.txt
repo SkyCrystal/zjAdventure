@@ -7,11 +7,15 @@ project(Item VERSION 1.0 LANGUAGES CXX)
 file(GLOB_RECURSE ITEM_SOURCES "*.cpp")
 file(GLOB_RECURSE ITEM_HEADERS "*.h")
 
-add_library(${PROJECT_NAME} SHARED ${ITEM_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${ITEM_SOURCES})
 
 find_package(nlohmann_json REQUIRED)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PUBLIC
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/include
+)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     nlohmann_json::nlohmann_json

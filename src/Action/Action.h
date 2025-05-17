@@ -2,7 +2,7 @@
 
 #include "IAction.h"
 
-class Action : public IAction {
+class Action : public virtual IAction {
  public:
   Action(ActionType actionType, std::weak_ptr<ISelectableTarget> from)
       : IAction(actionType, from) {}

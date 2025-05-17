@@ -1,7 +1,9 @@
 #include "Game.h"
 #include "GameService.h"
-#include "Utils.h"
 
+#include "Action/NormalDamage.h"
+
+#include "Util/Utils.h"
 
 GAME_API Game::Game()
     : currentState(GameState::MENU), turnCount(0), isPlayerTurn(true) {
@@ -10,7 +12,7 @@ GAME_API Game::Game()
   gameData.playerMaxHealth = 100;
   gameData.playerLevel = 1;
   gameData.playerExperience = 0;
-  GameService::getInstance().AddGameService(this);
+  GameServiceManager::getInstance().AddGameService(this);
 }
 
 GAME_API Game::~Game() {
@@ -29,6 +31,7 @@ GAME_API void Game::update() {
   } else {
     // 处理敌人回合
   }
+  NormalDamage* test;
 }
 
 GAME_API nlohmann::json Game::getGameStateJson() const {
