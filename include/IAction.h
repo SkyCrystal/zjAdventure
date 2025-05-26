@@ -9,23 +9,41 @@
 class ISelectableTarget;
 enum class ActionType {
   UNKNOWN,
+  // UI效果
   APPEARANCE,
+  // 伤害
   DAMAGE,
+  // 治疗
   HEAL,
-
+  // 受到伤害
+  HURT,
+  // 受到治疗
+  HEALED,
+  // 临时buff
   TEMP_BUFF,
+  // 永久buff
   PERMANENT_BUFF,
-
+  // 移除buff
+  REMOVE_BUFF,
+  // 移除道具
   REMOVE_ITEM,
+  // 添加道具
   ADD_ITEM,
+  // 战吼
   CREATE,
+  // 死亡
   DEATH,
-
+  // 战斗开始
   GAME_START,
+  // 战斗结束
   GAME_END,
+  // 回合开始
   ROUND_START,
+  // 回合结束
   ROUND_END,
+  // 行动开始
   TURN_START,
+  // 行动结束
   TURN_END,
 
   MOVE,
@@ -34,12 +52,11 @@ enum class ActionType {
 
 class IAction : public virtual ITargetSelector {
  public:
-  IAction(ActionType actionType, std::shared_ptr<ISelectableTarget> from)
+  IAction(ActionType actionType, std::weak_ptr<ISelectableTarget> from)
       : actionType_(actionType), from_(from) {}
   virtual ~IAction() = default;
-  virtual void OnAction() = 0;
-  virtual ActionType GetType() { return actionType_; }
-  std::shared_ptr<ISelectableTarget> getFrom() { return from_.lock(); }
+  virtual ActionType getType() { return actionType_; }
+  std::weak_ptr<ISelectableTarget> getFrom() { return from_; }
 
  private:
   ActionType actionType_;

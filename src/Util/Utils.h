@@ -9,20 +9,35 @@ concept RefedPtr = requires(T a) {
                      { a.owner_before(a) } -> std::convertible_to<bool>;
                    };
 
-template <RefedPtr T, RefedPtr U>
-
-bool is_different(T&& t, U&& u) {
-  return t.owner_before(u) || u.owner_before(t);
-}
 std::shared_ptr<ICharacter> getOwner(std::shared_ptr<ISelectableTarget> target);
 
 class TargetFirstEnemy : public virtual ITargetSelector {
  public:
-  TargetFirstEnemy(std::shared_ptr<ISelectableTarget> from) : from_(from) {}
+  TargetFirstEnemy(std::weak_ptr<ISelectableTarget> from) : from_(from) {}
   virtual ~TargetFirstEnemy() = default;
 
   std::vector<std::shared_ptr<ISelectableTarget>> getTargets() const override;
 
  private:
   std::weak_ptr<ISelectableTarget> from_;
+};
+
+class FixedTarget : public virtual ITargetSelector {
+ public:
+  FixedTarget(std::vector<std::weak_ptr<ISelectableTarget>> targets)
+      : targets_(targets) {}
+  virtual ~FixedTarget() = default;
+  std::vector<std::shared_ptr<ISelectableTarget>> getTargets() const override {
+    std::vector<std::shared_ptr<ISelectableTarget>> ret;
+    for (const auto& target : targets_) {
+      auto t = target.lock();
+      if (t) {
+        ret.push_back(t);
+      }
+    }
+    return ret;
+  }
+
+ private:
+  std::vector<std::weak_ptr<ISelectableTarget>> targets_;
 };

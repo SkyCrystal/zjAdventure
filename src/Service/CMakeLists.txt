@@ -2,12 +2,12 @@
 cmake_minimum_required(VERSION 3.16)
 
 # 定义项目名称和版本
-project(Game VERSION 1.0 LANGUAGES CXX)
+project(Service VERSION 1.0 LANGUAGES CXX)
 
-file(GLOB_RECURSE GAME_SOURCES "*.cpp")
-file(GLOB_RECURSE GAME_HEADERS "*.h")
+file(GLOB_RECURSE SERVICE_SOURCES "*.cpp")
+file(GLOB_RECURSE SERVICE_HEADERS "*.h")
 
-add_library(${PROJECT_NAME} STATIC ${GAME_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${SERVICE_SOURCES})
 
 find_package(nlohmann_json REQUIRED)
 
@@ -19,11 +19,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     nlohmann_json::nlohmann_json
-    Character
-    Util
-    Item
-    # Action
-    # Service
 )
 
 message(STATUS "CMAKE_SOURCE_DIR is: ${CMAKE_SOURCE_DIR}")

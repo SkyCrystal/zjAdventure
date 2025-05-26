@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "IAction.h"
 #include "IReactiable.h"
 #include "ISelectableTarget.h"
 

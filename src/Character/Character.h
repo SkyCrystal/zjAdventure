@@ -1,7 +1,9 @@
 #pragma once
 
+#include <functional>
 #include <list>
 #include <memory>
+#include <queue>
 
 #include "ICharacter.h"
 #include "IItem.h"
@@ -17,8 +19,44 @@ class Character : public ICharacter {
   std::vector<std::shared_ptr<IAction>> onAction(
       std::shared_ptr<IAction> action) override;
 
-  int getIndex() const override;
-
  private:
-  std::list<std::shared_ptr<IAction>> pending_actions_;
+  virtual std::vector<std::shared_ptr<IAction>> onContinuePendingActions();
+  virtual std::vector<std::shared_ptr<IAction>> onGameStart(
+      std::shared_ptr<IAction> action);
+  virtual std::vector<std::shared_ptr<IAction>> onGameEnd(
+      std::shared_ptr<IAction> action) {
+    return {};
+  };
+  virtual std::vector<std::shared_ptr<IAction>> onRoundStart(
+      std::shared_ptr<IAction> action) {
+    return {};
+  };
+  virtual std::vector<std::shared_ptr<IAction>> onRoundEnd(
+      std::shared_ptr<IAction> action) {
+    return {};
+  };
+  virtual std::vector<std::shared_ptr<IAction>> onTurnStart(
+      std::shared_ptr<IAction> action) {
+    return {};
+  };
+  virtual std::vector<std::shared_ptr<IAction>> onTurnEnd(
+      std::shared_ptr<IAction> action) {
+    return {};
+  };
+  // 受到攻击
+  virtual std::vector<std::shared_ptr<IAction>> onDamage(
+      std::shared_ptr<IAction> action);
+  // 受到治疗
+  virtual std::vector<std::shared_ptr<IAction>> onHeal(
+      std::shared_ptr<IAction> action) {
+    return {};
+  };
+  // 受到伤害
+  virtual std::vector<std::shared_ptr<IAction>> onHurt(
+      std::shared_ptr<IAction> action) {
+    return {};
+  };
+
+  std::queue<std::shared_ptr<IAction>> pending_actions_;
+  std::vector<std::shared_ptr<IItem>> items_;
 };

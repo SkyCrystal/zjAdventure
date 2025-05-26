@@ -17,9 +17,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 find_package(nlohmann_json REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} STATIC
+target_link_libraries(${PROJECT_NAME} PUBLIC
     nlohmann_json::nlohmann_json
-    Game
 )
 
 message(STATUS "CMAKE_SOURCE_DIR is: ${CMAKE_SOURCE_DIR}")

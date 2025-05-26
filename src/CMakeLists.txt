@@ -11,7 +11,7 @@ add_subdirectory(testlib)
 # add_subdirectory(Action)
 add_subdirectory(Character)
 add_subdirectory(Game)
-# add_subdirectory(Item)
+add_subdirectory(Item)
 
 add_subdirectory(Util)
 

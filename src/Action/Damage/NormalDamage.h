@@ -1,17 +1,16 @@
-#include "../DamageAction.h"
+#include "../Actions.h"
 
 #include <memory>
 #include "DamageCalculator.h"
 #include "Utils.h"
 
-
 class NormalDamage : public DamageAction, public TargetFirstEnemy {
  public:
-  NormalDamage(std::shared_ptr<ISelectableTarget> creator)
+  NormalDamage(std::weak_ptr<ISelectableTarget> creator)
       : DamageAction(creator), TargetFirstEnemy(creator) {}
   virtual ~NormalDamage() = default;
   int getDamage() override {
     return DamageCalculator<DamageCalcType::ATK_PERCENTAGE>::calculate(
-        getOwner(getFrom()), 100);
+        getOwner(getFrom().lock()), 100);
   }
 };

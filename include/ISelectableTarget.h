@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "IndexGenerator.h"
 
 enum class TargetType {
@@ -9,7 +11,8 @@ enum class TargetType {
   SYSTEM,
 };
 
-class ISelectableTarget {
+class ISelectableTarget
+    : public std::enable_shared_from_this<ISelectableTarget> {
  public:
   ISelectableTarget(TargetType targetType)
       : index_(GetNextIndex()), targetType_(targetType) {}
