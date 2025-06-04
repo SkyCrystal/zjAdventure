@@ -6,7 +6,7 @@
 
 int main() {
   // 创建游戏实例
-  Game game;
+  auto game = std::make_shared<Game>();
 
   // 创建Crow应用
   crow::SimpleApp app;
@@ -32,12 +32,12 @@ int main() {
 
   // API端点：获取游戏状态
   CROW_ROUTE(app, "/api/game-state")
-  ([&game]() { return crow::response(game.getGameStateJson().dump()); });
+  ([&game]() { return crow::response(game->getGameStateJson().dump()); });
 
   // API端点：更新游戏状态
   CROW_ROUTE(app, "/api/update")
   ([&game]() {
-    game.update();
+    game->update();
     return crow::response(200);
   });
 

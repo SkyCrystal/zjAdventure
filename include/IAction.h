@@ -3,8 +3,10 @@
 // 行为一般需要被外部执行
 // 是不是也可以让行为自己去调用游戏服务来触发一些全局事件
 
+#include <nlohmann/json.hpp>
 #include "ISelectableTarget.h"
 #include "ITargetSelector.h"
+
 
 class ISelectableTarget;
 enum class ActionType {
@@ -57,6 +59,7 @@ class IAction : public virtual ITargetSelector {
   virtual ~IAction() = default;
   virtual ActionType getType() { return actionType_; }
   std::weak_ptr<ISelectableTarget> getFrom() { return from_; }
+  virtual nlohmann::json toJson() { return nlohmann::json(); }
 
  private:
   ActionType actionType_;

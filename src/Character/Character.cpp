@@ -121,8 +121,11 @@ std::vector<std::shared_ptr<IAction>> Character::onDamage(
   if (!on_self) {
     return {};
   }
-
-  auto damage_value = std::max(1, damageAction->getDamage() - defensePower_);
+  if (!damageAction) {
+    abort();
+  }
+  int raw_damage = damageAction->getDamage();
+  auto damage_value = std::max(1, raw_damage - defensePower_);
   health_ -= damage_value;
   auto hurt_action = std::make_shared<HurtAction>(
       damageAction->getFrom(), weak_from_this(), damage_value);

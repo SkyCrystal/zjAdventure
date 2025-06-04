@@ -8,9 +8,10 @@
 
 #include "IAction.h"
 #include "IGameService.h"
+#include "ISelectableTarget.h"
 #include "dllexport.h"
 
-class Game : public IGameService {
+class Game : public IGameService, public ISelectableTarget {
  public:
   Game();
   ~Game();
@@ -26,7 +27,7 @@ class Game : public IGameService {
 
   void update();
 
-  GameState getState() const { return currentState; }
+  GameState getState() const { return current_state_; }
 
   nlohmann::json getGameStateJson() const;
 
@@ -36,9 +37,9 @@ class Game : public IGameService {
   std::weak_ptr<ICharacter> current_enemy_;
   std::weak_ptr<ICharacter> current_player_;
 
-  GameState currentState;
-  int turnCount;
-  bool isPlayerTurn;
+  GameState current_state_;
+  int battle_round_ = 0;
+  int turn_count_ = 0;
   std::queue<std::shared_ptr<IAction>> pending_actions_;
   std::vector<std::shared_ptr<IAction>> actions_log_;
 };

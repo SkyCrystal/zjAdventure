@@ -38,4 +38,7 @@ class CommonAction : public IAction, public FixedTarget {
   CommonAction(ActionType type, std::weak_ptr<ISelectableTarget> from)
       : IAction(type, from), FixedTarget({}) {}
   virtual ~CommonAction() = default;
+
+ public:
+  int data_ = 0;
 };
