@@ -3,58 +3,528 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>回合制Roguelike游戏</title>
+    <title>回合制Roguelike战斗游戏</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            background-color: #1a1a1a;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
             color: #ffffff;
-        }
-        #game-container {
-            max-width: 800px;
-            margin: 0 auto;
+            min-height: 100vh;
             padding: 20px;
-            background-color: #2a2a2a;
-            border-radius: 10px;
         }
-        #player-stats {
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #333;
-            border-radius: 5px;
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-areas: 
+                "header header"
+                "battlefield controls"
+                "actions actions";
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            gap: 20px;
+            min-height: calc(100vh - 40px);
         }
-        .stat-bar {
-            height: 20px;
-            background-color: #444;
-            border-radius: 10px;
-            margin: 5px 0;
+
+        .game-header {
+            grid-area: header;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
+        .game-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .game-status {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 1.1rem;
+        }
+
+        .status-item {
+            padding: 5px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .battlefield {
+            grid-area: battlefield;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 400px;
+        }
+
+        .character-card {
+            width: 280px;
+            padding: 20px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .character-card.player {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+        }
+
+        .character-card.enemy {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .character-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .character-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .character-id {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .health-section {
+            margin-bottom: 15px;
+        }
+
+        .health-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
         .health-bar {
-            background-color: #4CAF50;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .health-fill {
             height: 100%;
-            border-radius: 10px;
-            transition: width 0.3s;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .health-fill.player {
+            background: linear-gradient(90deg, #4ecdc4, #44b8ac);
+        }
+
+        .health-fill.enemy {
+            background: linear-gradient(90deg, #ff6b6b, #e55555);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .items-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 15px;
+        }
+
+        .items-title {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .items-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .item-badge {
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .vs-indicator {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffa726;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .controls-panel {
+            grid-area: controls;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .controls-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #ffa726;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .action-button:active {
+            transform: translateY(0);
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .actions-log {
+            grid-area: actions;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .actions-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #ffa726;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .actions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .action-item {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            border-left: 3px solid #4ecdc4;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-item.damage {
+            border-left-color: #ff6b6b;
+        }
+
+        .action-item.hurt {
+            border-left-color: #ffa726;
+        }
+
+        .action-item.death {
+            border-left-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .action-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 3px;
+        }
+
+        .game-state-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .state-before-battle {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .state-in-battle {
+            background: linear-gradient(45deg, #ff6b6b, #e55555);
+            animation: pulse 2s infinite;
+        }
+
+        .state-build {
+            background: linear-gradient(45deg, #4ecdc4, #44b8ac);
+        }
+
+        .state-end {
+            background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .game-container {
+                grid-template-areas: 
+                    "header"
+                    "battlefield"
+                    "controls"
+                    "actions";
+                grid-template-columns: 1fr;
+            }
+
+            .battlefield {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .character-card {
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .vs-indicator {
+                font-size: 2rem;
+                margin: 10px 0;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .game-status {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .game-header h1 {
+                font-size: 2rem;
+            }
+
+            .character-card {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+
+        /* 滚动条样式 */
+        .actions-log::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .actions-log::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .actions-log::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .actions-log::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <h1>回合制Roguelike游戏</h1>
-        <div id="player-stats">
-            <h2>玩家状态</h2>
-            <div>等级: <span id="player-level">1</span></div>
-            <div>经验值: <span id="player-exp">0</span></div>
-            <div>生命值: <span id="player-health">100</span>/<span id="player-max-health">100</span></div>
-            <div class="stat-bar">
-                <div id="health-bar" class="health-bar" style="width: 100%"></div>
+    <div class="game-container">
+        <!-- 游戏标题和状态 -->
+        <div class="game-header">
+            <h1>回合制Roguelike战斗</h1>
+            <div class="game-status">
+                <div class="status-item">
+                    <span>回合: </span><span id="turn-count">0</span>
+                </div>
+                <div class="status-item">
+                    <span>战斗轮次: </span><span id="battle-round">0</span>
+                </div>
             </div>
         </div>
-        <div>
-            <button onclick="updateGame()" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">经验+1</button>
+
+        <!-- 战场 -->
+        <div class="battlefield">
+            <!-- 玩家角色卡 -->
+            <div class="character-card player" id="player-card">
+                <div class="character-header">
+                    <div class="character-title">玩家</div>
+                    <div class="character-id">ID: <span id="player-id">-</span></div>
+                </div>
+                
+                <div class="health-section">
+                    <div class="health-label">
+                        <span>生命值</span>
+                        <span><span id="player-health">100</span>/<span id="player-max-health">100</span></span>
+                    </div>
+                    <div class="health-bar">
+                        <div class="health-fill player" id="player-health-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="player-attack">20</div>
+                        <div class="stat-label">攻击力</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="player-defense">5</div>
+                        <div class="stat-label">防御力</div>
+                    </div>
+                </div>
+
+                <div class="items-section">
+                    <div class="items-title">装备道具</div>
+                    <div class="items-list" id="player-items">
+                        <!-- 道具将通过JavaScript动态添加 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VS指示器 -->
+            <div class="vs-indicator">VS</div>
+
+            <!-- 敌人角色卡 -->
+            <div class="character-card enemy" id="enemy-card">
+                <div class="character-header">
+                    <div class="character-title">敌人</div>
+                    <div class="character-id">ID: <span id="enemy-id">-</span></div>
+                </div>
+                
+                <div class="health-section">
+                    <div class="health-label">
+                        <span>生命值</span>
+                        <span><span id="enemy-health">100</span>/<span id="enemy-max-health">100</span></span>
+                    </div>
+                    <div class="health-bar">
+                        <div class="health-fill enemy" id="enemy-health-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="enemy-attack">10</div>
+                        <div class="stat-label">攻击力</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="enemy-defense">5</div>
+                        <div class="stat-label">防御力</div>
+                    </div>
+                </div>
+
+                <div class="items-section">
+                    <div class="items-title">装备道具</div>
+                    <div class="items-list" id="enemy-items">
+                        <!-- 道具将通过JavaScript动态添加 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 控制面板 -->
+        <div class="controls-panel">
+            <div class="controls-title">游戏控制</div>
+            <button class="action-button" onclick="nextTurn()" id="next-turn-btn">
+                下一回合
+            </button>
+            <button class="action-button" onclick="resetGame()" id="reset-btn">
+                重置游戏
+            </button>
+        </div>
+
+        <!-- 动作日志 -->
+        <div class="actions-log">
+            <div class="actions-title">
+                <span>战斗日志</span>
+                <button style="background: none; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;" onclick="clearLog()">清空</button>
+            </div>
+            <div class="actions-list" id="actions-list">
+                <!-- 动作日志将通过JavaScript动态添加 -->
+            </div>
         </div>
     </div>
+
+    <!-- 游戏状态指示器 -->
+    <div class="game-state-indicator" id="game-state-indicator">
+        准备中
+    </div>
+
     <script src="/js/game.js"></script>
 </body>
 </html> 

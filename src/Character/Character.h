@@ -19,6 +19,8 @@ class Character : public ICharacter {
   std::vector<std::shared_ptr<IAction>> onAction(
       std::shared_ptr<IAction> action) override;
 
+  nlohmann::json toJson() const override;
+
  private:
   virtual std::vector<std::shared_ptr<IAction>> onContinuePendingActions();
   virtual std::vector<std::shared_ptr<IAction>> onGameStart(

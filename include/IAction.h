@@ -7,7 +7,6 @@
 #include "ISelectableTarget.h"
 #include "ITargetSelector.h"
 
-
 class ISelectableTarget;
 enum class ActionType {
   UNKNOWN,
@@ -59,7 +58,12 @@ class IAction : public virtual ITargetSelector {
   virtual ~IAction() = default;
   virtual ActionType getType() { return actionType_; }
   std::weak_ptr<ISelectableTarget> getFrom() { return from_; }
-  virtual nlohmann::json toJson() { return nlohmann::json(); }
+  virtual nlohmann::json toJson() const {
+    nlohmann::json ret;
+    ret["type"] = static_cast<int>(actionType_);
+    ret["from"] = from_.lock()->toJson();
+    return ret;
+  }
 
  private:
   ActionType actionType_;

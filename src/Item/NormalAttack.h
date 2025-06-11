@@ -9,4 +9,5 @@ class NormalAttack : public Item {
   }
   std::vector<std::shared_ptr<IAction>> onAction(
       std::shared_ptr<IAction> action) override;
+  nlohmann::json toJson() const override;
 };

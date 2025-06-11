@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <nlohmann/json.hpp>
 
 #include "IndexGenerator.h"
 
@@ -19,6 +20,12 @@ class ISelectableTarget
   virtual ~ISelectableTarget() = default;
   virtual int getIndex() const { return index_; }
   virtual TargetType getTargetType() const { return targetType_; }
+  virtual nlohmann::json toJson() const {
+    nlohmann::json ret;
+    ret["index"] = getIndex();
+    ret["targetType"] = getTargetType();
+    return ret;
+  }
 
  private:
   int index_;

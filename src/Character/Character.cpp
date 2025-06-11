@@ -137,3 +137,16 @@ std::vector<std::shared_ptr<IAction>> Character::onDamage(
   }
   return ret;
 }
+
+nlohmann::json Character::toJson() const {
+  nlohmann::json ret = ISelectableTarget::toJson();
+  ret["health"] = health_;
+  ret["attackPower"] = attackPower_;
+  ret["defensePower"] = defensePower_;
+  ret["isEnemy"] = isEnemy_;
+  ret["items"] = nlohmann::json::array();
+  for (const auto& item : items_) {
+    ret["items"].push_back(item->toJson());
+  }
+  return ret;
+}

@@ -122,14 +122,10 @@ nlohmann::json Game::getGameStateJson() const {
   auto enemy = current_enemy_.lock();
   if (player) {
     // 添加玩家数据
-    j["player"] = {{"health", player->getHealth()},
-                   {"attackPower", player->getAttackPower()},
-                   {"defensePower", player->getDefensePower()}};
+    j["player"] = player->toJson();
   }
   if (enemy) {
-    j["enemy"] = {{"health", enemy->getHealth()},
-                  {"attackPower", enemy->getAttackPower()},
-                  {"defensePower", enemy->getDefensePower()}};
+    j["enemy"] = enemy->toJson();
   }
   j["battle_round_"] = battle_round_;
   j["actions_log_"] = nlohmann::json::array();

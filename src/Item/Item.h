@@ -1,4 +1,5 @@
 #include "IItem.h"
+#include "ISelectableTarget.h"
 #include "Utils.h"
 
 class Item : public IItem {
@@ -7,6 +8,10 @@ class Item : public IItem {
   virtual ~Item() = default;
   virtual std::weak_ptr<ISelectableTarget> getOwner() const override {
     return owner_;
+  }
+  virtual nlohmann::json toJson() const override {
+    nlohmann::json ret = ISelectableTarget::toJson();
+    return ret;
   }
 
  private:

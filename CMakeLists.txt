@@ -11,6 +11,14 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
+# 解决 Windows 下中文编码问题 (C4819 警告)
+if(WIN32 AND MSVC)
+    add_compile_options(/utf-8)
+    add_compile_options(/wd4819) # 禁用 C4819 警告
+    # 减少编译输出的详细信息
+    add_compile_options(/nologo) # 不显示编译器版本信息
+endif()
+
 # 查找必要的包
 find_package(Crow REQUIRED)
 find_package(nlohmann_json REQUIRED)
@@ -19,12 +27,12 @@ find_package(nlohmann_json REQUIRED)
 add_executable(zjAdventure main.cpp)
 
 # 设置包含目录
-target_include_directories(zjAdventure PRIVATE 
+target_include_directories(zjAdventure PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 # 链接库
-target_link_libraries(zjAdventure PRIVATE 
+target_link_libraries(zjAdventure PRIVATE
     Crow::Crow
     nlohmann_json::nlohmann_json
     Game

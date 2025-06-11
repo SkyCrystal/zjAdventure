@@ -17,3 +17,9 @@ std::vector<std::shared_ptr<IAction>> NormalAttack::onAction(
       return {};
   }
 }
+
+nlohmann::json NormalAttack::toJson() const {
+  nlohmann::json ret = Item::toJson();
+  ret["name"] = "NormalAttack";
+  return ret;
+}
