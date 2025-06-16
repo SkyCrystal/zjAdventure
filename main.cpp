@@ -6,7 +6,7 @@
 
 int main() {
   // 创建游戏实例
-  auto game = std::make_shared<Game>();
+  auto game = std::shared_ptr<Game>(new Game());
 
   // 创建Crow应用
   crow::SimpleApp app;

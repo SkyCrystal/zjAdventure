@@ -12,7 +12,11 @@
 // 最普通的角色模板
 class Character : public ICharacter {
  public:
-  Character(int health, int attackPower, int defensePower, bool isEnemy);
+  Character(std::wstring description,
+            int health,
+            int attackPower,
+            int defensePower,
+            bool isEnemy);
   ~Character() override;
 
   bool isEnemy() const override { return isEnemy_; }

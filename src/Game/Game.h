@@ -34,12 +34,12 @@ class Game : public IGameService, public ISelectableTarget {
  private:
   void onContinuePendingActions();
   std::vector<std::shared_ptr<ICharacter>> current_characters_;
-  std::weak_ptr<ICharacter> current_enemy_;
-  std::weak_ptr<ICharacter> current_player_;
+  std::vector<std::weak_ptr<ICharacter>> current_enemies_;
+  std::vector<std::weak_ptr<ICharacter>> current_players_;
 
   GameState current_state_;
   int battle_round_ = 0;
   int turn_count_ = 0;
   std::queue<std::shared_ptr<IAction>> pending_actions_;
-  std::vector<std::shared_ptr<IAction>> actions_log_;
+  std::vector<nlohmann::json> actions_log_;
 };

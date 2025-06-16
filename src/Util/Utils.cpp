@@ -19,6 +19,9 @@ std::shared_ptr<ICharacter> getOwner(
 
 std::vector<std::shared_ptr<ISelectableTarget>> TargetFirstEnemy::getTargets()
     const {
-  return {GameServiceManager::getInstance().GetGameService()->getFirstEnemy(
-      getOwner(from_.lock()))};
+  auto game = GameServiceManager::getInstance().GetGameService();
+  if (auto e = game->getFirstEnemy(getOwner(from_.lock()))) {
+    return {e};
+  }
+  return {};
 }

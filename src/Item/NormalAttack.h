@@ -4,7 +4,8 @@
 
 class NormalAttack : public Item {
  public:
-  NormalAttack(std::weak_ptr<ISelectableTarget> owner) : Item(owner) {
+  NormalAttack(std::weak_ptr<ISelectableTarget> owner)
+      : Item(L"NormalAttack", owner) {
     printf("NormalAttack::NormalAttack of %d\n", owner.lock()->getIndex());
   }
   std::vector<std::shared_ptr<IAction>> onAction(

@@ -11,7 +11,8 @@ class IItem;
 
 class ICharacter : public virtual IReactiable, public ISelectableTarget {
  public:
-  ICharacter() : ISelectableTarget(TargetType::CHARACTER) {}
+  ICharacter(std::wstring description)
+      : ISelectableTarget(TargetType::CHARACTER, description) {}
   virtual ~ICharacter() = default;
   int getHealth() const { return health_; }
   int getAttackPower() const { return attackPower_; }
@@ -22,6 +23,7 @@ class ICharacter : public virtual IReactiable, public ISelectableTarget {
 
  protected:
   int health_;
+  int maxHealth_;
   int attackPower_;
   int defensePower_;
   bool isEnemy_;

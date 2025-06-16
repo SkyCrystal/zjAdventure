@@ -10,7 +10,7 @@ std::vector<std::shared_ptr<IAction>> NormalAttack::onAction(
       if (getOwner().lock()->getIndex() ==
           action->getFrom().lock()->getIndex()) {
         printf("NormalAttack::onAction::NormalDamage\n");
-        return {std::make_shared<NormalDamage>(getOwner())};
+        return {std::shared_ptr<NormalDamage>(new NormalDamage(getOwner()))};
       }
     }
     default:

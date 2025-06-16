@@ -7,11 +7,14 @@
 #include "IAction.h"
 #include "Item/NormalAttack.h"
 #include "Utils.h"
-Character::Character(int health,
+Character::Character(std::wstring description,
+                     int health,
                      int attackPower,
                      int defensePower,
-                     bool isEnemy) {
+                     bool isEnemy)
+    : ICharacter(description) {
   health_ = health;
+  maxHealth_ = health;
   attackPower_ = attackPower;
   defensePower_ = defensePower;
   isEnemy_ = isEnemy;
@@ -99,7 +102,8 @@ std::vector<std::shared_ptr<IAction>> Character::onContinuePendingActions() {
 
 std::vector<std::shared_ptr<IAction>> Character::onGameStart(
     std::shared_ptr<IAction> action) {
-  items_.push_back(std::make_shared<NormalAttack>(weak_from_this()));
+  items_.push_back(
+      std::shared_ptr<NormalAttack>(new NormalAttack(weak_from_this())));
   return {};
 }
 
@@ -127,12 +131,13 @@ std::vector<std::shared_ptr<IAction>> Character::onDamage(
   int raw_damage = damageAction->getDamage();
   auto damage_value = std::max(1, raw_damage - defensePower_);
   health_ -= damage_value;
-  auto hurt_action = std::make_shared<HurtAction>(
-      damageAction->getFrom(), weak_from_this(), damage_value);
+  auto hurt_action = std::shared_ptr<HurtAction>(
+      new HurtAction(damageAction->getFrom(), weak_from_this(), damage_value));
   ret.push_back(hurt_action);
 
   if (health_ <= 0) {
-    auto death_action = std::make_shared<DeathAction>(weak_from_this());
+    auto death_action =
+        std::shared_ptr<DeathAction>(new DeathAction(weak_from_this()));
     ret.push_back(death_action);
   }
   return ret;

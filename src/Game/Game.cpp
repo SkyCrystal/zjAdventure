@@ -13,16 +13,18 @@
 Game::Game()
     : current_state_(GameState::BEFORE_BATTLE),
       turn_count_(0),
-      ISelectableTarget(TargetType::SYSTEM) {
+      ISelectableTarget(TargetType::SYSTEM, L"Game") {
   // 初始化游戏数据
   GameServiceManager::getInstance().AddGameService(this);
 
-  auto player = std::make_shared<Character>(100, 20, 5, false);
-  auto enemy = std::make_shared<Character>(100, 10, 5, true);
+  auto player =
+      std::shared_ptr<Character>(new Character(L"Player", 100, 20, 5, false));
+  auto enemy =
+      std::shared_ptr<Character>(new Character(L"Enemy", 100, 10, 5, true));
   current_characters_.push_back(player);
   current_characters_.push_back(enemy);
-  current_enemy_ = enemy;
-  current_player_ = player;
+  current_enemies_.push_back(enemy);
+  current_players_.push_back(player);
 }
 
 Game::~Game() {
@@ -34,8 +36,8 @@ void Game::update() {
   if (current_state_ == GameState::BEFORE_BATTLE) {
     // TODO: 触发开始游戏事件
 
-    auto game_start = std::make_shared<CommonAction>(ActionType::GAME_START,
-                                                     weak_from_this());
+    auto game_start = std::shared_ptr<CommonAction>(
+        new CommonAction(ActionType::GAME_START, weak_from_this()));
     pending_actions_.push(std::move(game_start));
 
     onContinuePendingActions();
@@ -48,8 +50,8 @@ void Game::update() {
   }
   // 游戏逻辑更新
 
-  auto round_start =
-      std::make_shared<CommonAction>(ActionType::ROUND_START, weak_from_this());
+  auto round_start = std::shared_ptr<CommonAction>(
+      new CommonAction(ActionType::ROUND_START, weak_from_this()));
   round_start->data_ = ++turn_count_;
   pending_actions_.push(std::move(round_start));
   onContinuePendingActions();
@@ -58,8 +60,8 @@ void Game::update() {
     if (!character->isAlive()) {
       continue;
     }
-    auto turn_start =
-        std::make_shared<CommonAction>(ActionType::TURN_START, character);
+    auto turn_start = std::shared_ptr<CommonAction>(
+        new CommonAction(ActionType::TURN_START, character));
     turn_start->data_ = turn_count_;
     pending_actions_.push(std::move(turn_start));
     onContinuePendingActions();
@@ -83,7 +85,6 @@ void Game::onContinuePendingActions() {
       printf("owner is not alive\n");
       continue;
     }
-    actions_log_.push_back(action);
     printf("action: %d\n", action->getType());
     for (const auto& character : current_characters_) {
       auto actions = character->onAction(action);
@@ -111,6 +112,7 @@ void Game::onContinuePendingActions() {
       default:
         break;
     }
+    actions_log_.push_back(action->toJson());
   }
 }
 
@@ -118,19 +120,25 @@ nlohmann::json Game::getGameStateJson() const {
   nlohmann::json j;
   j["state"] = static_cast<int>(current_state_);
   j["turn_count_"] = turn_count_;
-  auto player = current_player_.lock();
-  auto enemy = current_enemy_.lock();
-  if (player) {
-    // 添加玩家数据
-    j["player"] = player->toJson();
+
+  j["players"] = nlohmann::json::array();
+  for (const auto& player : current_players_) {
+    if (auto p = player.lock()) {
+      j["players"].push_back(p->toJson());
+    }
   }
-  if (enemy) {
-    j["enemy"] = enemy->toJson();
+
+  j["enemies"] = nlohmann::json::array();
+  for (const auto& enemy : current_enemies_) {
+    if (auto e = enemy.lock()) {
+      j["enemies"].push_back(e->toJson());
+    }
   }
+
   j["battle_round_"] = battle_round_;
   j["actions_log_"] = nlohmann::json::array();
   for (const auto& action : actions_log_) {
-    j["actions_log_"].push_back(action->toJson());
+    j["actions_log_"].push_back(action);
   }
   return j;
 }
@@ -153,8 +161,22 @@ std::vector<std::shared_ptr<ICharacter>> Game::getCurrentCharacters() const {
 
 std::shared_ptr<ICharacter> Game::getFirstEnemy(
     const std::shared_ptr<ICharacter>& me) const {
-  if (current_enemy_.lock()->getIndex() != me->getIndex()) {
-    return current_enemy_.lock();
+  if (me->isEnemy()) {
+    for (const auto& player : current_players_) {
+      if (auto p = player.lock()) {
+        if (p->isAlive()) {
+          return p;
+        }
+      }
+    }
+  } else {
+    for (const auto& enemy : current_enemies_) {
+      if (auto e = enemy.lock()) {
+        if (e->isAlive()) {
+          return e;
+        }
+      }
+    }
   }
-  return current_player_.lock();
+  return nullptr;
 }
