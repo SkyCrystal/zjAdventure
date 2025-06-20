@@ -6,9 +6,9 @@
 
 class IAction;
 
-class IReactiable {
+class IReactable {
  public:
-  virtual ~IReactiable() = default;
+  virtual ~IReactable() = default;
 
   virtual std::vector<std::shared_ptr<IAction>> onAction(
       std::shared_ptr<IAction> action) = 0;

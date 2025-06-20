@@ -37,7 +37,7 @@ void Game::update() {
     // TODO: 触发开始游戏事件
 
     auto game_start = std::shared_ptr<CommonAction>(
-        new CommonAction(ActionType::GAME_START, weak_from_this()));
+        new CommonAction(ActionType::BATTLE_START, weak_from_this()));
     pending_actions_.push(std::move(game_start));
 
     onContinuePendingActions();

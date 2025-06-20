@@ -24,23 +24,6 @@ Character::~Character() {}
 
 std::vector<std::shared_ptr<IAction>> Character::onAction(
     std::shared_ptr<IAction> action) {
-  pending_actions_.push(action);
-  std::vector<std::shared_ptr<IAction>> ret;
-  while (!pending_actions_.empty()) {
-    auto actions = onContinuePendingActions();
-    ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
-               std::make_move_iterator(actions.end()));
-  }
-  return ret;
-}
-
-std::vector<std::shared_ptr<IAction>> Character::onContinuePendingActions() {
-  if (pending_actions_.empty()) {
-    return {};
-  }
-
-  auto action = pending_actions_.front();
-  pending_actions_.pop();
   std::vector<std::shared_ptr<IAction>> ret;
 
   for (const auto& item : items_) {
@@ -50,13 +33,13 @@ std::vector<std::shared_ptr<IAction>> Character::onContinuePendingActions() {
   }
 
   switch (action->getType()) {
-    case ActionType::GAME_START: {
+    case ActionType::BATTLE_START: {
       auto actions = onGameStart(action);
       ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
                  std::make_move_iterator(actions.end()));
       break;
     }
-    case ActionType::GAME_END: {
+    case ActionType::BATTLE_END: {
       auto actions = onGameEnd(action);
       ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
                  std::make_move_iterator(actions.end()));

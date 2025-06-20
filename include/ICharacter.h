@@ -4,12 +4,12 @@
 #include <vector>
 
 #include "IAction.h"
-#include "IReactiable.h"
+#include "IReactable.h"
 #include "ISelectableTarget.h"
 
 class IItem;
 
-class ICharacter : public virtual IReactiable, public ISelectableTarget {
+class ICharacter : public virtual IReactable, public ISelectableTarget {
  public:
   ICharacter(std::wstring description)
       : ISelectableTarget(TargetType::CHARACTER, description) {}

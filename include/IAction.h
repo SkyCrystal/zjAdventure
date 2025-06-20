@@ -35,9 +35,9 @@ enum class ActionType {
   // 死亡
   DEATH,
   // 战斗开始
-  GAME_START,
+  BATTLE_START,
   // 战斗结束
-  GAME_END,
+  BATTLE_END,
   // 回合开始
   ROUND_START,
   // 回合结束

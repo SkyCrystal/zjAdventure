@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 #include "IAction.h"
-#include "IReactiable.h"
+#include "IReactable.h"
 #include "ISelectableTarget.h"
 
-class IItem : public ISelectableTarget, public virtual IReactiable {
+class IItem : public ISelectableTarget, public virtual IReactable {
  public:
   IItem(std::wstring description)
       : ISelectableTarget(TargetType::ITEM, description) {}

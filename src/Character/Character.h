@@ -26,7 +26,6 @@ class Character : public ICharacter {
   nlohmann::json toJson() const override;
 
  private:
-  virtual std::vector<std::shared_ptr<IAction>> onContinuePendingActions();
   virtual std::vector<std::shared_ptr<IAction>> onGameStart(
       std::shared_ptr<IAction> action);
   virtual std::vector<std::shared_ptr<IAction>> onGameEnd(
@@ -63,6 +62,5 @@ class Character : public ICharacter {
     return {};
   };
 
-  std::queue<std::shared_ptr<IAction>> pending_actions_;
   std::vector<std::shared_ptr<IItem>> items_;
 };
