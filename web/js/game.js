@@ -52,8 +52,8 @@ function updateGameState() {
 function updateUI(data) {
   updateGameHeader(data);
   updateGameStateIndicator(data);
-  updatePlayerCard(data.player);
-  updateEnemyCard(data.enemy);
+  updatePlayerCard(data.players[0]);
+  updateEnemyCard(data.enemies[0]);
   updateActionsLog(data.actions_log_);
   updateControls(data);
 }
@@ -83,13 +83,7 @@ function updatePlayerCard(playerData) {
 
   // 生命值 - 需要跟踪最大生命值
   const currentHealth = Math.max(0, playerData.health || 0);
-  let maxHealth = parseInt(localStorage.getItem('player_max_health')) || 100;
-
-  // 如果当前血量大于已知最大血量，更新最大血量
-  if (currentHealth > maxHealth) {
-    maxHealth = currentHealth;
-    localStorage.setItem('player_max_health', maxHealth);
-  }
+  let maxHealth = playerData.maxHealth;
 
   document.getElementById('player-health').textContent = currentHealth;
   document.getElementById('player-max-health').textContent = maxHealth;
@@ -125,15 +119,8 @@ function updateEnemyCard(enemyData) {
   // 基本信息
   document.getElementById('enemy-id').textContent = enemyData.index || '-';
 
-  // 生命值 - 需要跟踪最大生命值
   const currentHealth = Math.max(0, enemyData.health || 0);
-  let maxHealth = parseInt(localStorage.getItem('enemy_max_health')) || 100;
-
-  // 如果当前血量大于已知最大血量，更新最大血量
-  if (currentHealth > maxHealth) {
-    maxHealth = currentHealth;
-    localStorage.setItem('enemy_max_health', maxHealth);
-  }
+  let maxHealth = enemyData.maxHealth;
 
   document.getElementById('enemy-health').textContent = currentHealth;
   document.getElementById('enemy-max-health').textContent = maxHealth;
@@ -243,17 +230,17 @@ function getActionDescription(action) {
 
   switch (actionType) {
     case 2:  // 伤害
-      return `来源: #${from} | 造成伤害`;
+      return `${from} 发起攻击！`;
     case 4:  // 受到伤害
       return `目标受到伤害`;
     case 12:  // 死亡
-      return `角色 #${from} 死亡`;
+      return `${from} 死亡！`;
     case 13:  // 游戏开始
       return '战斗开始！';
     case 15:  // 回合开始
       return `第 ${action.data || '?'} 回合开始`;
     case 17:  // 行动开始
-      return `角色 #${from} 开始行动`;
+      return `${from} 开始行动!`;
     default:
       return `执行了动作 (来源: #${from})`;
   }
@@ -320,9 +307,6 @@ function resetGame() {
     gameData = null;
     lastActionCount = 0;
 
-    // 清空本地存储的最大生命值
-    localStorage.removeItem('player_max_health');
-    localStorage.removeItem('enemy_max_health');
 
     // 清空动作日志显示
     document.getElementById('actions-list').innerHTML = '';

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "IAction.h"
+#include "IItem.h"
 #include "IReactable.h"
 #include "ISelectableTarget.h"
 
@@ -20,6 +21,19 @@ class ICharacter : public virtual IReactable, public ISelectableTarget {
   virtual bool isEnemy() const = 0;
   bool isAlive() const { return alive_; }
   void setAlive(bool alive) { alive_ = alive; }
+  nlohmann::json toJson() const override {
+    nlohmann::json ret = ISelectableTarget::toJson();
+    ret["health"] = health_;
+    ret["maxHealth"] = maxHealth_;
+    ret["attackPower"] = attackPower_;
+    ret["defensePower"] = defensePower_;
+    ret["isEnemy"] = isEnemy_;
+    ret["items"] = nlohmann::json::array();
+    for (const auto& item : items_) {
+      ret["items"].push_back(item->toJson());
+    }
+    return ret;
+  }
 
  protected:
   int health_;

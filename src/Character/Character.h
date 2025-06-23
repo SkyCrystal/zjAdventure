@@ -61,6 +61,4 @@ class Character : public ICharacter {
       std::shared_ptr<IAction> action) {
     return {};
   };
-
-  std::vector<std::shared_ptr<IItem>> items_;
 };

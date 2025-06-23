@@ -5,6 +5,7 @@
 
 #include "Action/Actions.h"
 #include "IAction.h"
+#include "ICharacter.h"
 #include "Item/NormalAttack.h"
 #include "Utils.h"
 Character::Character(std::string description,
@@ -127,14 +128,6 @@ std::vector<std::shared_ptr<IAction>> Character::onDamage(
 }
 
 nlohmann::json Character::toJson() const {
-  nlohmann::json ret = ISelectableTarget::toJson();
-  ret["health"] = health_;
-  ret["attackPower"] = attackPower_;
-  ret["defensePower"] = defensePower_;
-  ret["isEnemy"] = isEnemy_;
-  ret["items"] = nlohmann::json::array();
-  for (const auto& item : items_) {
-    ret["items"].push_back(item->toJson());
-  }
+  nlohmann::json ret = ICharacter::toJson();
   return ret;
 }
