@@ -15,14 +15,14 @@ enum class TargetType {
 class ISelectableTarget
     : public std::enable_shared_from_this<ISelectableTarget> {
  public:
-  ISelectableTarget(TargetType targetType, std::wstring description)
+  ISelectableTarget(TargetType targetType, std::string description)
       : index_(GetNextIndex()),
         targetType_(targetType),
         description_(description) {}
   virtual ~ISelectableTarget() = default;
   virtual int getIndex() const { return index_; }
   virtual TargetType getTargetType() const { return targetType_; }
-  virtual std::wstring getDescription() const { return description_; }
+  virtual std::string getDescription() const { return description_; }
   virtual nlohmann::json toJson() const {
     nlohmann::json ret;
     ret["index"] = getIndex();
@@ -34,5 +34,5 @@ class ISelectableTarget
  private:
   int index_;
   TargetType targetType_;
-  std::wstring description_;
+  std::string description_;
 };

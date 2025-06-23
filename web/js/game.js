@@ -239,23 +239,23 @@ function createActionItem(action, index) {
 // 获取动作描述
 function getActionDescription(action) {
   const actionType = action.type || 0;
-  const fromIndex = action.from ? action.from.index : '未知';
+  const from = action.from ? action.from.description : '未知';
 
   switch (actionType) {
     case 2:  // 伤害
-      return `来源: #${fromIndex} | 造成伤害`;
+      return `来源: #${from} | 造成伤害`;
     case 4:  // 受到伤害
       return `目标受到伤害`;
     case 12:  // 死亡
-      return `角色 #${fromIndex} 死亡`;
+      return `角色 #${from} 死亡`;
     case 13:  // 游戏开始
       return '战斗开始！';
     case 15:  // 回合开始
-      return `第 ${action.data_ || '?'} 回合开始`;
+      return `第 ${action.data || '?'} 回合开始`;
     case 17:  // 行动开始
-      return `角色 #${fromIndex} 开始行动`;
+      return `角色 #${from} 开始行动`;
     default:
-      return `执行了动作 (来源: #${fromIndex})`;
+      return `执行了动作 (来源: #${from})`;
   }
 }
 

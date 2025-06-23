@@ -38,6 +38,11 @@ class CommonAction : public IAction, public FixedTarget {
   CommonAction(ActionType type, std::weak_ptr<ISelectableTarget> from)
       : IAction(type, from), FixedTarget({}) {}
   virtual ~CommonAction() = default;
+  nlohmann::json toJson() const override {
+    nlohmann::json j = IAction::toJson();
+    j["data"] = data_;
+    return j;
+  }
 
  public:
   int data_ = 0;

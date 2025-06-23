@@ -8,7 +8,7 @@
 
 class IItem : public ISelectableTarget, public virtual IReactable {
  public:
-  IItem(std::wstring description)
+  IItem(std::string description)
       : ISelectableTarget(TargetType::ITEM, description) {}
   virtual ~IItem() = default;
   virtual std::weak_ptr<ISelectableTarget> getOwner() const = 0;

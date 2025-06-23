@@ -12,7 +12,7 @@
 // 最普通的角色模板
 class Character : public ICharacter {
  public:
-  Character(std::wstring description,
+  Character(std::string description,
             int health,
             int attackPower,
             int defensePower,

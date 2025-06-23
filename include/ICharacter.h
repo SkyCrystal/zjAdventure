@@ -11,7 +11,7 @@ class IItem;
 
 class ICharacter : public virtual IReactable, public ISelectableTarget {
  public:
-  ICharacter(std::wstring description)
+  ICharacter(std::string description)
       : ISelectableTarget(TargetType::CHARACTER, description) {}
   virtual ~ICharacter() = default;
   int getHealth() const { return health_; }

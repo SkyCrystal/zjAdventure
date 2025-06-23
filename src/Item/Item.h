@@ -4,7 +4,7 @@
 
 class Item : public IItem {
  public:
-  Item(std::wstring description, std::weak_ptr<ISelectableTarget> owner)
+  Item(std::string description, std::weak_ptr<ISelectableTarget> owner)
       : IItem(description), owner_(owner) {}
   virtual ~Item() = default;
   virtual std::weak_ptr<ISelectableTarget> getOwner() const override {

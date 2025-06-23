@@ -7,7 +7,7 @@
 #include "IAction.h"
 #include "Item/NormalAttack.h"
 #include "Utils.h"
-Character::Character(std::wstring description,
+Character::Character(std::string description,
                      int health,
                      int attackPower,
                      int defensePower,

@@ -13,14 +13,14 @@
 Game::Game()
     : current_state_(GameState::BEFORE_BATTLE),
       turn_count_(0),
-      ISelectableTarget(TargetType::SYSTEM, L"Game") {
+      ISelectableTarget(TargetType::SYSTEM, "Game") {
   // 初始化游戏数据
   GameServiceManager::getInstance().AddGameService(this);
 
   auto player =
-      std::shared_ptr<Character>(new Character(L"Player", 100, 20, 5, false));
+      std::shared_ptr<Character>(new Character("Player", 100, 20, 5, false));
   auto enemy =
-      std::shared_ptr<Character>(new Character(L"Enemy", 100, 10, 5, true));
+      std::shared_ptr<Character>(new Character("Enemy", 100, 10, 5, true));
   current_characters_.push_back(player);
   current_characters_.push_back(enemy);
   current_enemies_.push_back(enemy);
