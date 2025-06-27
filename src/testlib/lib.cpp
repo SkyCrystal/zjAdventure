@@ -1,5 +1,6 @@
 #include <iostream>
+#include "../../include/dllexport.h"
 
-__declspec(dllexport) void test() {
+GAME_API void test() {
   std::cout << "Test function called!" << std::endl;
 }

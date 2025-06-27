@@ -1,10 +1,10 @@
 #pragma once
-static int index = 0;
+static int generator_index = 0;
 
 inline int GetNextIndex() {
-  return ++index;
+  return ++generator_index;
 }
 
 inline void ResetIndex() {
-  index = 0;
+  generator_index = 0;
 }
