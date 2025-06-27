@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IAction.h"
+#include "IItem.h"
 
 #include <memory>
 #include "Utils.h"
@@ -46,4 +47,29 @@ class CommonAction : public IAction, public FixedTarget {
 
  public:
   int data_ = 0;
+};
+
+class AddItemAction : public IAction, public FixedTarget {
+ public:
+  AddItemAction(std::shared_ptr<ISelectableTarget> from,
+                std::shared_ptr<IItem> item)
+      : IAction(ActionType::ADD_ITEM, from), FixedTarget({item}), item_(item) {}
+  virtual ~AddItemAction() = default;
+  std::shared_ptr<IItem> getItem() const { return item_; }
+
+ private:
+  std::shared_ptr<IItem> item_;
+};
+
+class RemoveItemAction : public IAction, public FixedTarget {
+ public:
+  RemoveItemAction(std::shared_ptr<ISelectableTarget> from,
+                   std::shared_ptr<ISelectableTarget> item)
+      : IAction(ActionType::REMOVE_ITEM, from), FixedTarget({item}) {}
+  virtual ~RemoveItemAction() = default;
+
+  int getIndex() const { return index_; }
+
+ private:
+  int index_;
 };

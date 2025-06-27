@@ -86,8 +86,6 @@ std::vector<std::shared_ptr<IAction>> Character::onAction(
 
 std::vector<std::shared_ptr<IAction>> Character::onGameStart(
     std::shared_ptr<IAction> action) {
-  items_.push_back(
-      std::shared_ptr<NormalAttack>(new NormalAttack(weak_from_this())));
   return {};
 }
 

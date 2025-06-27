@@ -4,10 +4,10 @@
 #include "ICharacter.h"
 #include "ITargetSelector.h"
 
-template <typename T>
-concept RefedPtr = requires(T a) {
-                     { a.owner_before(a) } -> std::convertible_to<bool>;
-                   };
+// template <typename T>
+// concept RefedPtr = requires(T a) {
+//   { a.owner_before(a) } -> std::convertible_to<bool>;
+// };
 
 std::shared_ptr<ICharacter> getOwner(std::shared_ptr<ISelectableTarget> target);
 

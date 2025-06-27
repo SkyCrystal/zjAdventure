@@ -36,3 +36,7 @@ class ISelectableTarget
   TargetType targetType_;
   std::string description_;
 };
+
+inline bool operator==(const ISelectableTarget& a, const ISelectableTarget& b) {
+  return a.getIndex() == b.getIndex();
+}

@@ -3,10 +3,12 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include "Action/Actions.h"
 #include "Action/Damage/NormalDamage.h"
 #include "Character/Character.h"
 #include "IAction.h"
 #include "ISelectableTarget.h"
+#include "Item/NormalAttack.h"
 #include "Service/GameService.h"
 #include "Util/Utils.h"
 
@@ -16,26 +18,39 @@ Game::Game()
       ISelectableTarget(TargetType::SYSTEM, "Game") {
   // 初始化游戏数据
   GameServiceManager::getInstance().AddGameService(this);
-
-  auto player =
-      std::shared_ptr<Character>(new Character("Player", 100, 20, 5, false));
-  auto enemy =
-      std::shared_ptr<Character>(new Character("Enemy", 100, 10, 5, true));
-  current_characters_.push_back(player);
-  current_characters_.push_back(enemy);
-  current_enemies_.push_back(enemy);
-  current_players_.push_back(player);
 }
 
 Game::~Game() {
+  GameServiceManager::getInstance().RemoveGameService();
   // 清理资源
+}
+
+// 临时的 先搞两个能打起来的
+void Game::InitPlayer() {
+  auto player =
+      std::shared_ptr<Character>(new Character("Player", 100, 20, 5, false));
+  current_characters_.push_back(player);
+  current_players_.push_back(player);
+  auto item = std::shared_ptr<IItem>(new NormalAttack(player));
+  pending_actions_.push(std::shared_ptr<IAction>(
+      new AddItemAction(shared_from_this(), std::move(item))));
+
+  auto enemy =
+      std::shared_ptr<Character>(new Character("Enemy", 100, 10, 5, true));
+  current_characters_.push_back(enemy);
+  current_enemies_.push_back(enemy);
+  item = std::shared_ptr<IItem>(new NormalAttack(enemy));
+  pending_actions_.push(std::shared_ptr<IAction>(
+      new AddItemAction(shared_from_this(), std::move(item))));
+
+  onContinuePendingActions();
 }
 
 void Game::update() {
   printf("update\n");
   if (current_state_ == GameState::BEFORE_BATTLE) {
     // TODO: 触发开始游戏事件
-
+    InitPlayer();
     auto game_start = std::shared_ptr<CommonAction>(
         new CommonAction(ActionType::BATTLE_START, weak_from_this()));
     pending_actions_.push(std::move(game_start));
@@ -86,6 +101,23 @@ void Game::onContinuePendingActions() {
       continue;
     }
     printf("action: %d\n", action->getType());
+
+    switch (action->getType()) {
+      case ActionType::ADD_ITEM: {
+        auto addItemAction = std::static_pointer_cast<AddItemAction>(action);
+        addItem(from, addItemAction->getItem());
+        break;
+      }
+      case ActionType::REMOVE_ITEM: {
+        auto removeItemAction =
+            std::static_pointer_cast<RemoveItemAction>(action);
+        removeItem(from, removeItemAction->getIndex());
+        break;
+      }
+      default:
+        break;
+    }
+
     for (const auto& character : current_characters_) {
       auto actions = character->onAction(action);
       for (auto& action : actions) {
@@ -114,6 +146,17 @@ void Game::onContinuePendingActions() {
     }
     actions_log_.push_back(action->toJson());
   }
+}
+
+void Game::addItem(std::shared_ptr<ISelectableTarget> from,
+                   std::shared_ptr<IItem> item) {
+  auto targetCharacter = getOwner(item);
+  targetCharacter->addItem(item);
+}
+
+void Game::removeItem(std::shared_ptr<ISelectableTarget> from, int index) {
+  auto targetCharacter = getOwner(from);
+  targetCharacter->removeItem(index);
 }
 
 nlohmann::json Game::getGameStateJson() const {
