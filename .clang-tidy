@@ -1,0 +1,11 @@
+Checks: '*,
+-llvmlibc-*,
+-readability-inconsistent-declaration-parameter-name,
+-readability-identifier-length,
+-altera-struct-pack-align,
+-cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+-hicpp-no-array-decay,
+-modernize-use-trailing-return-type,
+-fuchsia-default-arguments-calls,
+-altera-unroll-loops,
+-hicpp-no-malloc'
