@@ -8,10 +8,7 @@
 #include "ICharacter.h"
 #include "Item/NormalAttack.h"
 #include "Utils.h"
-Character::Character(std::string description,
-                     int health,
-                     int attackPower,
-                     int defensePower,
+Character::Character(std::string description, int health, int attackPower, int defensePower,
                      bool isEnemy)
     : ICharacter(description) {
   health_ = health;
@@ -23,8 +20,7 @@ Character::Character(std::string description,
 
 Character::~Character() {}
 
-std::vector<std::shared_ptr<IAction>> Character::onAction(
-    std::shared_ptr<IAction> action) {
+std::vector<std::shared_ptr<IAction>> Character::onAction(std::shared_ptr<IAction> action) {
   std::vector<std::shared_ptr<IAction>> ret;
 
   for (const auto& item : items_) {
@@ -84,13 +80,11 @@ std::vector<std::shared_ptr<IAction>> Character::onAction(
   return ret;
 }
 
-std::vector<std::shared_ptr<IAction>> Character::onGameStart(
-    std::shared_ptr<IAction> action) {
+std::vector<std::shared_ptr<IAction>> Character::onGameStart(std::shared_ptr<IAction> action) {
   return {};
 }
 
-std::vector<std::shared_ptr<IAction>> Character::onDamage(
-    std::shared_ptr<IAction> action) {
+std::vector<std::shared_ptr<IAction>> Character::onDamage(std::shared_ptr<IAction> action) {
   std::vector<std::shared_ptr<IAction>> ret;
   if (action->getType() != ActionType::DAMAGE) {
     return {};
@@ -118,8 +112,7 @@ std::vector<std::shared_ptr<IAction>> Character::onDamage(
   ret.push_back(hurt_action);
 
   if (health_ <= 0) {
-    auto death_action =
-        std::shared_ptr<DeathAction>(new DeathAction(weak_from_this()));
+    auto death_action = std::shared_ptr<DeathAction>(new DeathAction(weak_from_this()));
     ret.push_back(death_action);
   }
   return ret;

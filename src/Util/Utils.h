@@ -12,20 +12,19 @@
 std::shared_ptr<ICharacter> getOwner(std::shared_ptr<ISelectableTarget> target);
 
 class TargetFirstEnemy : public virtual ITargetSelector {
- public:
+public:
   TargetFirstEnemy(std::weak_ptr<ISelectableTarget> from) : from_(from) {}
   virtual ~TargetFirstEnemy() = default;
 
   std::vector<std::shared_ptr<ISelectableTarget>> getTargets() const override;
 
- private:
+private:
   std::weak_ptr<ISelectableTarget> from_;
 };
 
 class FixedTarget : public virtual ITargetSelector {
- public:
-  FixedTarget(std::vector<std::weak_ptr<ISelectableTarget>> targets)
-      : targets_(targets) {}
+public:
+  FixedTarget(std::vector<std::weak_ptr<ISelectableTarget>> targets) : targets_(targets) {}
   virtual ~FixedTarget() = default;
   std::vector<std::shared_ptr<ISelectableTarget>> getTargets() const override {
     std::vector<std::shared_ptr<ISelectableTarget>> ret;
@@ -38,6 +37,6 @@ class FixedTarget : public virtual ITargetSelector {
     return ret;
   }
 
- private:
+private:
   std::vector<std::weak_ptr<ISelectableTarget>> targets_;
 };

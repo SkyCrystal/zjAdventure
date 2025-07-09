@@ -6,12 +6,11 @@
 class ICharacter;
 
 class IGameService {
- public:
+public:
   virtual ~IGameService() = default;
   virtual int getCurrentLevel() const = 0;
   virtual int getCurrentRound() const = 0;
-  virtual std::vector<std::shared_ptr<ICharacter>> getCurrentCharacters()
-      const = 0;
+  virtual std::vector<std::shared_ptr<ICharacter>> getCurrentCharacters() const = 0;
   virtual std::shared_ptr<ICharacter> getFirstEnemy(
       const std::shared_ptr<ICharacter>& me) const = 0;
 };

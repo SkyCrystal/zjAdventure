@@ -11,7 +11,7 @@ enum class DamageCalcType {
 };
 template <DamageCalcType dmg_type>
 class DamageCalculator {
- public:
+public:
   static int calculate(std::shared_ptr<ICharacter> from, int sum) {
     switch (dmg_type) {
       case DamageCalcType::FIXED:

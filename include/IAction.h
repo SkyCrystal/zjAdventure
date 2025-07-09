@@ -52,12 +52,16 @@ enum class ActionType {
 };
 
 class IAction : public virtual ITargetSelector {
- public:
+public:
   IAction(ActionType actionType, std::weak_ptr<ISelectableTarget> from)
       : actionType_(actionType), from_(from) {}
   virtual ~IAction() = default;
-  virtual ActionType getType() { return actionType_; }
-  std::weak_ptr<ISelectableTarget> getFrom() { return from_; }
+  virtual ActionType getType() {
+    return actionType_;
+  }
+  std::weak_ptr<ISelectableTarget> getFrom() {
+    return from_;
+  }
   virtual nlohmann::json toJson() const {
     nlohmann::json ret;
     ret["type"] = static_cast<int>(actionType_);
@@ -65,7 +69,7 @@ class IAction : public virtual ITargetSelector {
     return ret;
   }
 
- private:
+private:
   ActionType actionType_;
   std::weak_ptr<ISelectableTarget> from_;
 };

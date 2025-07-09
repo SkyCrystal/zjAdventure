@@ -25,8 +25,7 @@ int main() {
     if (!file.is_open()) {
       return crow::response(404);
     }
-    std::string content((std::istreambuf_iterator<char>(file)),
-                        std::istreambuf_iterator<char>());
+    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     return crow::response(content);
   });
 

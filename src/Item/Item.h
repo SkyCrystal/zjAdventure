@@ -3,7 +3,7 @@
 #include "Utils.h"
 
 class Item : public IItem {
- public:
+public:
   Item(std::string description, std::weak_ptr<ISelectableTarget> owner)
       : IItem(description), owner_(owner) {}
   virtual ~Item() = default;
@@ -15,6 +15,6 @@ class Item : public IItem {
     return ret;
   }
 
- private:
+private:
   std::weak_ptr<ISelectableTarget> owner_;
 };
