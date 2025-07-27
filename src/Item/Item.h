@@ -4,8 +4,8 @@
 
 class Item : public IItem {
 public:
-  Item(std::string description, std::weak_ptr<ISelectableTarget> owner)
-      : IItem(description), owner_(owner) {}
+  Item(std::string description, std::weak_ptr<ISelectableTarget> owner, PriorityLevel priority)
+      : IItem(description, priority), owner_(owner) {}
   virtual ~Item() = default;
   virtual std::weak_ptr<ISelectableTarget> getOwner() const override {
     return owner_;

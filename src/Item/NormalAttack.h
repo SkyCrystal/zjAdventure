@@ -4,7 +4,8 @@
 
 class NormalAttack : public Item {
 public:
-  NormalAttack(std::weak_ptr<ISelectableTarget> owner) : Item("NormalAttack", owner) {
+  NormalAttack(std::weak_ptr<ISelectableTarget> owner)
+      : Item("NormalAttack", owner, PriorityLevel::CHARACTER_ACTION) {
     printf("NormalAttack::NormalAttack of %d\n", owner.lock()->getIndex());
   }
   void onAction(std::shared_ptr<IAction> action) override;

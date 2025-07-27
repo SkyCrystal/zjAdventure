@@ -1,6 +1,7 @@
 #pragma once
 // 角色应当具有的基本能力
 #include <memory>
+#include <set>
 #include <vector>
 
 #include "IAction.h"
@@ -31,7 +32,7 @@ public:
     alive_ = alive;
   }
   void addItem(std::shared_ptr<IItem> item) {
-    items_.push_back(item);
+    items_.insert(item);
   }
   void removeItem(int index) {
     std::erase_if(items_, [&index](const auto& i) { return i->getIndex() == index; });
@@ -58,5 +59,5 @@ protected:
   bool isEnemy_;
   bool alive_ = true;
 
-  std::vector<std::shared_ptr<IItem>> items_;
+  std::multiset<std::shared_ptr<IItem>> items_;
 };
