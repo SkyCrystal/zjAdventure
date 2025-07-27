@@ -68,8 +68,17 @@ public:
     ret["from"] = from_.lock()->toJson();
     return ret;
   }
+  std::vector<std::shared_ptr<IAction>>& subActions() {
+    return subActions_;
+  }
+
+  void addSubAction(std::shared_ptr<IAction> action) {
+    subActions_.push_back(std::move(action));
+  }
 
 private:
   ActionType actionType_;
   std::weak_ptr<ISelectableTarget> from_;
+  // 后继事件 用于预期紧接当前事件结算的场景
+  std::vector<std::shared_ptr<IAction>> subActions_;
 };

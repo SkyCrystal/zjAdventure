@@ -134,6 +134,9 @@ void Game::doAction(const std::shared_ptr<IAction>& action) {
       break;
   }
   actions_log_.push_back(action->toJson());
+  for (const auto& subAction : action->subActions()) {
+    doAction(subAction);
+  }
 }
 
 void Game::onContinuePendingActions() {
