@@ -1,0 +1,43 @@
+#include <spdlog/spdlog.h>
+#include "LoggerStream.h"
+#include "SpdLogger.h"
+
+LogStream::LogStream(SpdLogger::Level level, const char* file, int line)
+    : level_(level), file_(file), line_(line) {}
+
+LogStream::~LogStream() {
+  if (should_log()) {
+    log_message(stream_.str());
+  }
+}
+
+template <typename T>
+LogStream& LogStream::operator<<(const T& value) {
+  if (should_log()) {
+    stream_ << value;
+  }
+  return *this;
+}
+
+LogStream& LogStream::operator<<(std::ostream& (*manip)(std::ostream&)) {
+  if (should_log()) {
+    stream_ << manip;
+  }
+  return *this;
+}
+
+void LogStream::log_message(const std::string& msg) {
+  if (msg.empty())
+    return;
+
+  auto logger = SpdLogger::getLogger();
+  if (!logger)
+    return;
+
+  spdlog::source_loc loc{file_, line_, SPDLOG_FUNCTION};
+  logger->log(loc, static_cast<spdlog::level::level_enum>(level_), msg);
+}
+
+bool LogStream::should_log() const {
+  return level_ >= SpdLogger::getLevel();
+}
