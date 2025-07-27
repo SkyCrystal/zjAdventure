@@ -14,8 +14,9 @@ public:
 #define LOG_LINE() __builtin_LINE()
 #endif
 
-#define logT() \
-  GameServiceManager::getInstance().getLogService().LogStream(Level::Trace, LOG_FILE(), LOG_LINE())
+#define logT()                                                                           \
+  GameServiceManager::getInstance().getLogService().LogStream(ILogService::Level::Trace, \
+                                                              LOG_FILE(), LOG_LINE())
 // #define logD() LogStream(Logger::Level::Debug, LOG_FILE(), LOG_LINE())
 // #define logI() LogStream(Logger::Level::Info, LOG_FILE(), LOG_LINE())
 // #define logW() LogStream(Logger::Level::Warn, LOG_FILE(), LOG_LINE())
