@@ -23,6 +23,8 @@ public:
   int getCurrentRound() const override;
   std::vector<std::shared_ptr<ICharacter>> getCurrentCharacters() const override;
   std::shared_ptr<ICharacter> getFirstEnemy(const std::shared_ptr<ICharacter>& me) const override;
+  void postPendingAction(const std::shared_ptr<IAction>& action) override;
+  void doAction(const std::shared_ptr<IAction>& action);
 
   enum class GameState { BUILD, BEFORE_BATTLE, IN_BATTLE, END };
 

@@ -7,6 +7,6 @@ public:
   NormalAttack(std::weak_ptr<ISelectableTarget> owner) : Item("NormalAttack", owner) {
     printf("NormalAttack::NormalAttack of %d\n", owner.lock()->getIndex());
   }
-  std::vector<std::shared_ptr<IAction>> onAction(std::shared_ptr<IAction> action) override;
+  void onAction(std::shared_ptr<IAction> action) override;
   nlohmann::json toJson() const override;
 };

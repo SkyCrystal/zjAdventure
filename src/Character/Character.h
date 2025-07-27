@@ -18,35 +18,21 @@ public:
   bool isEnemy() const override {
     return isEnemy_;
   }
-  std::vector<std::shared_ptr<IAction>> onAction(std::shared_ptr<IAction> action) override;
+  void onAction(std::shared_ptr<IAction> action) override;
 
   nlohmann::json toJson() const override;
 
 private:
-  virtual std::vector<std::shared_ptr<IAction>> onGameStart(std::shared_ptr<IAction> action);
-  virtual std::vector<std::shared_ptr<IAction>> onGameEnd(std::shared_ptr<IAction> action) {
-    return {};
-  };
-  virtual std::vector<std::shared_ptr<IAction>> onRoundStart(std::shared_ptr<IAction> action) {
-    return {};
-  };
-  virtual std::vector<std::shared_ptr<IAction>> onRoundEnd(std::shared_ptr<IAction> action) {
-    return {};
-  };
-  virtual std::vector<std::shared_ptr<IAction>> onTurnStart(std::shared_ptr<IAction> action) {
-    return {};
-  };
-  virtual std::vector<std::shared_ptr<IAction>> onTurnEnd(std::shared_ptr<IAction> action) {
-    return {};
-  };
+  virtual void onGameStart(const std::shared_ptr<IAction>& action);
+  virtual void onGameEnd(const std::shared_ptr<IAction>& action) {}
+  virtual void onRoundStart(const std::shared_ptr<IAction>& action) {}
+  virtual void onRoundEnd(const std::shared_ptr<IAction>& action) {}
+  virtual void onTurnStart(const std::shared_ptr<IAction>& action) {}
+  virtual void onTurnEnd(const std::shared_ptr<IAction>& action) {}
   // 受到攻击
-  virtual std::vector<std::shared_ptr<IAction>> onDamage(std::shared_ptr<IAction> action);
+  virtual void onDamage(const std::shared_ptr<IAction>& action);
   // 受到治疗
-  virtual std::vector<std::shared_ptr<IAction>> onHeal(std::shared_ptr<IAction> action) {
-    return {};
-  };
+  virtual void onHeal(const std::shared_ptr<IAction>& action) {}
   // 受到伤害
-  virtual std::vector<std::shared_ptr<IAction>> onHurt(std::shared_ptr<IAction> action) {
-    return {};
-  };
+  virtual void onHurt(const std::shared_ptr<IAction>& action) {}
 };

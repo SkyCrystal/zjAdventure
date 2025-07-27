@@ -4,9 +4,11 @@
 #include <memory>
 
 #include "Action/Actions.h"
+#include "Game/Game.h"
 #include "IAction.h"
 #include "ICharacter.h"
 #include "Item/NormalAttack.h"
+#include "Service/GameService.h"
 #include "Utils.h"
 Character::Character(std::string description, int health, int attackPower, int defensePower,
                      bool isEnemy)
@@ -20,74 +22,53 @@ Character::Character(std::string description, int health, int attackPower, int d
 
 Character::~Character() {}
 
-std::vector<std::shared_ptr<IAction>> Character::onAction(std::shared_ptr<IAction> action) {
-  std::vector<std::shared_ptr<IAction>> ret;
-
+void Character::onAction(std::shared_ptr<IAction> action) {
   for (const auto& item : items_) {
-    auto actions = item->onAction(action);
-    ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
-               std::make_move_iterator(actions.end()));
+    item->onAction(action);
   }
 
   switch (action->getType()) {
     case ActionType::BATTLE_START: {
-      auto actions = onGameStart(action);
-      ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
-                 std::make_move_iterator(actions.end()));
+      onGameStart(action);
       break;
     }
     case ActionType::BATTLE_END: {
-      auto actions = onGameEnd(action);
-      ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
-                 std::make_move_iterator(actions.end()));
+      onGameEnd(action);
       break;
     }
     case ActionType::ROUND_START: {
-      auto actions = onRoundStart(action);
-      ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
-                 std::make_move_iterator(actions.end()));
+      onRoundStart(action);
       break;
     }
     case ActionType::ROUND_END: {
-      auto actions = onRoundEnd(action);
-      ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
-                 std::make_move_iterator(actions.end()));
+      onRoundEnd(action);
       break;
     }
     case ActionType::TURN_START: {
-      auto actions = onTurnStart(action);
-      ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
-                 std::make_move_iterator(actions.end()));
+      onTurnStart(action);
       break;
     }
     case ActionType::TURN_END: {
-      auto actions = onTurnEnd(action);
-      ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
-                 std::make_move_iterator(actions.end()));
+      onTurnEnd(action);
       break;
     }
 
     case ActionType::DAMAGE: {
-      auto actions = onDamage(action);
-      ret.insert(ret.end(), std::make_move_iterator(actions.begin()),
-                 std::make_move_iterator(actions.end()));
+      onDamage(action);
       break;
     }
     default:
       break;
   }
-
-  return ret;
 }
 
-std::vector<std::shared_ptr<IAction>> Character::onGameStart(std::shared_ptr<IAction> action) {
-  return {};
+void Character::onGameStart(const std::shared_ptr<IAction>& action) {
+  return;
 }
 
-std::vector<std::shared_ptr<IAction>> Character::onDamage(std::shared_ptr<IAction> action) {
-  std::vector<std::shared_ptr<IAction>> ret;
+void Character::onDamage(const std::shared_ptr<IAction>& action) {
   if (action->getType() != ActionType::DAMAGE) {
-    return {};
+    return;
   }
   auto damageAction = std::dynamic_pointer_cast<DamageAction>(action);
   const auto& target = damageAction->getTargets();
@@ -99,7 +80,7 @@ std::vector<std::shared_ptr<IAction>> Character::onDamage(std::shared_ptr<IActio
     }
   }
   if (!on_self) {
-    return {};
+    return;
   }
   if (!damageAction) {
     abort();
@@ -109,13 +90,12 @@ std::vector<std::shared_ptr<IAction>> Character::onDamage(std::shared_ptr<IActio
   health_ -= damage_value;
   auto hurt_action = std::shared_ptr<HurtAction>(
       new HurtAction(damageAction->getFrom(), weak_from_this(), damage_value));
-  ret.push_back(hurt_action);
+  GameServiceManager::getInstance().GetGameService()->postPendingAction(hurt_action);
 
   if (health_ <= 0) {
     auto death_action = std::shared_ptr<DeathAction>(new DeathAction(weak_from_this()));
-    ret.push_back(death_action);
+    GameServiceManager::getInstance().GetGameService()->postPendingAction(death_action);
   }
-  return ret;
 }
 
 nlohmann::json Character::toJson() const {

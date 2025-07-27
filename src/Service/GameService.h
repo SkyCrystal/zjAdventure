@@ -1,5 +1,7 @@
 #pragma once
 
+#include "IGameService.h"
+
 #define ADD_SERVICE(name)            \
 public:                              \
   void Add##name(I##name* service) { \
@@ -14,8 +16,6 @@ public:                              \
                                      \
 private:                             \
   I##name* name##_;
-
-class IGameService;
 
 class GameServiceManager {
 public:

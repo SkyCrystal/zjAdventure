@@ -81,67 +81,68 @@ void Game::update() {
   }
 }
 
+void Game::doAction(const std::shared_ptr<IAction>& action) {
+  auto from = action->getFrom().lock();
+  if (!from) {
+    printf("action from is null\n");
+    return;
+  }
+
+  auto owner = getOwner(from);
+  if (owner && !owner->isAlive()) {
+    printf("owner is not alive\n");
+    return;
+  }
+  printf("action: %d\n", action->getType());
+
+  switch (action->getType()) {
+    case ActionType::ADD_ITEM: {
+      auto addItemAction = std::static_pointer_cast<AddItemAction>(action);
+      addItem(from, addItemAction->getItem());
+      break;
+    }
+    case ActionType::REMOVE_ITEM: {
+      auto removeItemAction = std::static_pointer_cast<RemoveItemAction>(action);
+      removeItem(from, removeItemAction->getIndex());
+      break;
+    }
+    default:
+      break;
+  }
+
+  for (const auto& character : current_characters_) {
+    character->onAction(action);
+  }
+
+  switch (action->getType()) {
+    case ActionType::DEATH: {
+      owner->setAlive(false);
+      // if (character->getIndex() == current_player_.lock()->getIndex()) {
+      //   current_state_ = GameState::END;
+      //   current_characters_.clear();
+      // }
+      // if (character->getIndex() == current_enemy_.lock()->getIndex()) {
+      //   std::erase_if(current_characters_, [&character](const auto& c) {
+      //     return c->getIndex() == character->getIndex();
+      //   });
+      //   current_state_ = GameState::BUILD;
+      //   // trigger item select
+      // }
+      break;
+    }
+    default:
+      break;
+  }
+  actions_log_.push_back(action->toJson());
+}
+
 void Game::onContinuePendingActions() {
   auto result = std::vector<std::shared_ptr<IAction>>();
   while (!pending_actions_.empty()) {
     auto action = pending_actions_.front();
 
     pending_actions_.pop();
-    auto from = action->getFrom().lock();
-    if (!from) {
-      printf("action from is null\n");
-      continue;
-    }
-
-    auto owner = getOwner(from);
-    if (owner && !owner->isAlive()) {
-      printf("owner is not alive\n");
-      continue;
-    }
-    printf("action: %d\n", action->getType());
-
-    switch (action->getType()) {
-      case ActionType::ADD_ITEM: {
-        auto addItemAction = std::static_pointer_cast<AddItemAction>(action);
-        addItem(from, addItemAction->getItem());
-        break;
-      }
-      case ActionType::REMOVE_ITEM: {
-        auto removeItemAction = std::static_pointer_cast<RemoveItemAction>(action);
-        removeItem(from, removeItemAction->getIndex());
-        break;
-      }
-      default:
-        break;
-    }
-
-    for (const auto& character : current_characters_) {
-      auto actions = character->onAction(action);
-      for (auto& action : actions) {
-        pending_actions_.push(std::move(action));
-      }
-    }
-
-    switch (action->getType()) {
-      case ActionType::DEATH: {
-        owner->setAlive(false);
-        // if (character->getIndex() == current_player_.lock()->getIndex()) {
-        //   current_state_ = GameState::END;
-        //   current_characters_.clear();
-        // }
-        // if (character->getIndex() == current_enemy_.lock()->getIndex()) {
-        //   std::erase_if(current_characters_, [&character](const auto& c) {
-        //     return c->getIndex() == character->getIndex();
-        //   });
-        //   current_state_ = GameState::BUILD;
-        //   // trigger item select
-        // }
-        break;
-      }
-      default:
-        break;
-    }
-    actions_log_.push_back(action->toJson());
+    doAction(action);
   }
 }
 
@@ -217,4 +218,8 @@ std::shared_ptr<ICharacter> Game::getFirstEnemy(const std::shared_ptr<ICharacter
     }
   }
   return nullptr;
+}
+
+void Game::postPendingAction(const std::shared_ptr<IAction>& action) {
+  pending_actions_.push(action);
 }
