@@ -75,6 +75,14 @@ public:
   void addSubAction(std::shared_ptr<IAction> action) {
     subActions_.push_back(std::move(action));
   }
+  [[nodiscard]] bool isValid() const {
+    return actionType_ != ActionType::UNKNOWN;
+  }
+  // 标志当前事件已经无效化
+  // **同时会将后继事件无效化**
+  void invalidate() {
+    actionType_ = ActionType::UNKNOWN;
+  }
 
 private:
   ActionType actionType_;

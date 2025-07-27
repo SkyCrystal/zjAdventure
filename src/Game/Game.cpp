@@ -82,6 +82,9 @@ void Game::update() {
 }
 
 void Game::doAction(const std::shared_ptr<IAction>& action) {
+  if (!action->isValid()) {
+    return;
+  }
   auto from = action->getFrom().lock();
   if (!from) {
     printf("action from is null\n");
@@ -134,6 +137,9 @@ void Game::doAction(const std::shared_ptr<IAction>& action) {
       break;
   }
   actions_log_.push_back(action->toJson());
+  if (!action->isValid()) {
+    return;
+  }
   for (const auto& subAction : action->subActions()) {
     doAction(subAction);
   }
