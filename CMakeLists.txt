@@ -22,6 +22,7 @@ endif()
 # 查找必要的包
 find_package(Crow REQUIRED)
 find_package(nlohmann_json REQUIRED)
+find_package(spdlog REQUIRED)
 
 # 添加可执行文件
 add_executable(zjAdventure main.cpp)
@@ -35,6 +36,7 @@ target_include_directories(zjAdventure PRIVATE
 target_link_libraries(zjAdventure PRIVATE
     Crow::Crow
     nlohmann_json::nlohmann_json
+    spdlog::spdlog
     Game
 )
 
