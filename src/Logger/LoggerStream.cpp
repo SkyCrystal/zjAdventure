@@ -1,6 +1,7 @@
-#include <spdlog/spdlog.h>
 #include "LoggerStream.h"
+#include <spdlog/spdlog.h>
 #include "SpdLogger.h"
+
 
 LogStream::LogStream(SpdLogger::Level level, const char* file, int line)
     : level_(level), file_(file), line_(line) {}
