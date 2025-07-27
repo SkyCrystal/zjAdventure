@@ -1,14 +1,16 @@
-#include "NormalAttack.h"
 #include "Action/Damage/NormalDamage.h"
 #include "IAction.h"
+#include "Logger/Logger.h"
+#include "NormalAttack.h"
 #include "Service/GameService.h"
+
 
 void NormalAttack::onAction(std::shared_ptr<IAction> action) {
   switch (action->getType()) {
     case ActionType::TURN_START: {
-      printf("NormalAttack::onAction\n");
+      logD() << "NormalAttack::onAction\n";
       if (getOwner().lock()->getIndex() == action->getFrom().lock()->getIndex()) {
-        printf("NormalAttack::onAction::NormalDamage\n");
+        logD() << "NormalAttack::onAction::NormalDamage\n";
         GameServiceManager::getInstance().GetGameService()->postPendingAction(
             std::shared_ptr<NormalDamage>(new NormalDamage(getOwner())));
       }

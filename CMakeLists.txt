@@ -11,6 +11,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
+# 计算源文件路径偏移量，用于日志中的相对路径显示
+string(LENGTH "${CMAKE_CURRENT_SOURCE_DIR}/" SOURCE_DIR_LENGTH)
+add_compile_definitions(SOURCE_PATH_OFFSET=${SOURCE_DIR_LENGTH})
+
 # 解决 Windows 下中文编码问题 (C4819 警告)
 if(WIN32 AND MSVC)
     add_compile_options(/utf-8)

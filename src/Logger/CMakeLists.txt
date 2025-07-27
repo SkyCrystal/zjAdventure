@@ -2,29 +2,24 @@
 cmake_minimum_required(VERSION 3.16)
 
 # 定义项目名称和版本
-project(Game VERSION 1.0 LANGUAGES CXX)
+project(Logger VERSION 1.0 LANGUAGES CXX)
 
-file(GLOB_RECURSE GAME_SOURCES "*.cpp")
-file(GLOB_RECURSE GAME_HEADERS "*.h")
+file(GLOB_RECURSE LOGGER_SOURCES "*.cpp")
+file(GLOB_RECURSE LOGGER_HEADERS "*.h")
 
-add_library(${PROJECT_NAME} STATIC ${GAME_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${LOGGER_SOURCES})
 
-find_package(nlohmann_json REQUIRED)
+find_package(spdlog REQUIRED)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/include
+
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-    nlohmann_json::nlohmann_json
-    Character
-    Util
-    Item
-    Logger
-    # Action
-    # Service
+    spdlog::spdlog
 )
 
 message(STATUS "CMAKE_SOURCE_DIR is: ${CMAKE_SOURCE_DIR}")

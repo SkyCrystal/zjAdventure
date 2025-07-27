@@ -3,3 +3,4 @@ build
 .cache
 bin
 */.DS_Store
+.vs

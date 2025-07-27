@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IGameService.h"
+#include "ILogService.h"
 
 #define ADD_SERVICE(name)            \
 public:                              \
@@ -25,4 +26,5 @@ public:
   }
 
   ADD_SERVICE(GameService)
+  ADD_SERVICE(LogService)
 };
