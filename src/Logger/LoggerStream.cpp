@@ -13,20 +13,7 @@ LogStream::~LogStream() {
   }
 }
 
-template <typename T>
-LogStream& LogStream::operator<<(const T& value) {
-  if (should_log()) {
-    stream_ << value;
-  }
-  return *this;
-}
 
-LogStream& LogStream::operator<<(std::ostream& (*manip)(std::ostream&)) {
-  if (should_log()) {
-    stream_ << manip;
-  }
-  return *this;
-}
 
 void LogStream::log_message(const std::string& msg) {
   if (msg.empty())

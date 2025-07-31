@@ -17,5 +17,5 @@ include_directories(Util)
 add_subdirectory(Character)
 add_subdirectory(Game)
 add_subdirectory(Item)
-
+add_subdirectory(Logger)
 add_subdirectory(Util)

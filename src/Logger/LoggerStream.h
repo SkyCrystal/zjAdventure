@@ -9,11 +9,14 @@ public:
   ~LogStream();
 
   // 流操作符重载
-  template <typename T>
-  LogStream& operator<<(const T& value);
 
-  // 支持std::endl等流操作
-  LogStream& operator<<(std::ostream& (*manip)(std::ostream&));
+  template <typename T>
+  LogStream& operator<<(const T& value) {
+    if (should_log()) {
+      stream_ << value;
+    }
+    return *this;
+  }
 
 private:
   void log_message(const std::string& msg);
