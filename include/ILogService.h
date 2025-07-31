@@ -1,7 +1,9 @@
 #pragma once
+#include <memory>
+
 class LogStream;
-namespace spdlog{
-  class logger;
+namespace spdlog {
+class logger;
 }
 class ILogService {
 public:
@@ -10,4 +12,3 @@ public:
   virtual std::shared_ptr<spdlog::logger> getLogger() = 0;
   virtual Level getLevel() = 0;
 };
-
