@@ -2,10 +2,11 @@
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include "SpdLogger.h"
+#include "ILogService.h"
 
 class LogStream {
 public:
-  LogStream(SpdLogger::Level level, const char* file, int line);
+  LogStream(ILogService::Level level, const char* file, int line);
   ~LogStream();
 
   // 流操作符重载
@@ -22,7 +23,7 @@ private:
   void log_message(const std::string& msg);
   bool should_log() const;
 
-  SpdLogger::Level level_;
+  ILogService::Level level_;
   std::ostringstream stream_;
   const char* file_;
   int line_;

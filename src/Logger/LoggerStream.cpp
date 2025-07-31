@@ -2,6 +2,7 @@
 #include <spdlog/spdlog.h>
 #include "SpdLogger.h"
 #include "Service/GameService.h"
+#include <cstdio>
 
 
 LogStream::LogStream(SpdLogger::Level level, const char* file, int line)
@@ -16,12 +17,16 @@ LogStream::~LogStream() {
 
 
 void LogStream::log_message(const std::string& msg) {
-  if (msg.empty())
+  if (msg.empty()){
+    printf("Log is empty");
     return;
+  }
 
   auto logger = GameServiceManager::getInstance().GetLogService()->getLogger();
-  if (!logger)
+  if (!logger){
+    printf("No logger");
     return;
+  }
 
   spdlog::source_loc loc{file_, line_, SPDLOG_FUNCTION};
   logger->log(loc, static_cast<spdlog::level::level_enum>(level_), msg);
