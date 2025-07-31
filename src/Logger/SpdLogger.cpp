@@ -31,3 +31,7 @@ SpdLogger::Level SpdLogger::getLevel() {
 std::shared_ptr<spdlog::logger> SpdLogger::getLogger() {
   return logger_;
 }
+
+LogStream Log(SpdLogger::Level level, const char *file, int line){
+  return LogStream(level, file, line);
+}

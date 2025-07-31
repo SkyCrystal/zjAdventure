@@ -11,6 +11,7 @@
 #include "Item/NormalAttack.h"
 #include "Service/GameService.h"
 #include "Util/Utils.h"
+#include "Logger/SpdLogger.h"
 
 Game::Game()
     : current_state_(GameState::BEFORE_BATTLE),
@@ -18,6 +19,10 @@ Game::Game()
       ISelectableTarget(TargetType::SYSTEM, "Game") {
   // 初始化游戏数据
   GameServiceManager::getInstance().AddGameService(this);
+  auto spdLogInstance = new SpdLogger();
+  spdLogInstance->init("Log.txt");
+  GameServiceManager::getInstance().AddLogService(spdLogInstance);
+  
 }
 
 Game::~Game() {

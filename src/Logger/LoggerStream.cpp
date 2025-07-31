@@ -1,6 +1,7 @@
 #include "LoggerStream.h"
 #include <spdlog/spdlog.h>
 #include "SpdLogger.h"
+#include "Service/GameService.h"
 
 
 LogStream::LogStream(SpdLogger::Level level, const char* file, int line)
@@ -31,7 +32,7 @@ void LogStream::log_message(const std::string& msg) {
   if (msg.empty())
     return;
 
-  auto logger = SpdLogger::getLogger();
+  auto logger = GameServiceManager::getInstance().GetLogService()->getLogger();
   if (!logger)
     return;
 
@@ -40,5 +41,5 @@ void LogStream::log_message(const std::string& msg) {
 }
 
 bool LogStream::should_log() const {
-  return level_ >= SpdLogger::getLevel();
+  return level_ >= GameServiceManager::getInstance().GetLogService()->getLevel();
 }
