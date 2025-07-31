@@ -1,7 +1,6 @@
 #pragma once
 #include <spdlog/spdlog.h>
 #include <sstream>
-#include "SpdLogger.h"
 #include "ILogService.h"
 
 class LogStream {
