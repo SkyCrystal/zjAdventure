@@ -20,6 +20,6 @@ std::shared_ptr<spdlog::logger> SpdLogger::getLogger() {
   return logger_;
 }
 
-LogStream SpdLogger::Log(SpdLogger::Level level, const char* file, int line) {
-  return LogStream(level, file, line);
+LogStream SpdLogger::Log(SpdLogger::Level level, const char* file, int line, const char* function) {
+  return LogStream(level, file, line, function);
 }

@@ -8,7 +8,7 @@ class logger;
 class ILogService {
 public:
   enum class Level { Trace, Debug, Info, Warn, Error, Critical };
-  virtual LogStream Log(Level level, const char* file, int line) = 0;
+  virtual LogStream Log(Level level, const char* file, int line, const char* function) = 0;
   virtual std::shared_ptr<spdlog::logger> getLogger() = 0;
   virtual Level getLevel() = 0;
 };
