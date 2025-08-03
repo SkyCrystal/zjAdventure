@@ -5,7 +5,7 @@
 
 class LogStream {
 public:
-  LogStream(ILogService::Level level, const char* file, int line);
+  LogStream(ILogService::Level level, const char* file, int line, const char* function);
   ~LogStream();
 
   // 流操作符重载
@@ -24,6 +24,4 @@ private:
 
   ILogService::Level level_;
   std::ostringstream stream_;
-  const char* file_;
-  int line_;
 };

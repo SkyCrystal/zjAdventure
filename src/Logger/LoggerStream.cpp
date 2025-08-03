@@ -4,8 +4,10 @@
 #include "Service/GameService.h"
 #include "SpdLogger.h"
 
-LogStream::LogStream(SpdLogger::Level level, const char* file, int line)
-    : level_(level), file_(file), line_(line) {}
+LogStream::LogStream(SpdLogger::Level level, const char* file, int line, const char* function)
+    : level_(level) {
+  stream_ << "[" << file << ":" << line << "] " << function << " ";
+}
 
 LogStream::~LogStream() {
   if (should_log()) {
