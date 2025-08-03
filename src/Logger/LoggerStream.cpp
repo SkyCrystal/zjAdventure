@@ -28,10 +28,7 @@ void LogStream::log_message(const std::string& msg) {
     return;
   }
 
-  spdlog::source_loc loc{file_, line_, SPDLOG_FUNCTION};
-  logger->log(loc, static_cast<spdlog::level::level_enum>(level_), msg);
   logger->log(static_cast<spdlog::level::level_enum>(level_), msg);
-  logger->log(spdlog::level::err, msg.c_str());
   logger->flush();
 }
 
