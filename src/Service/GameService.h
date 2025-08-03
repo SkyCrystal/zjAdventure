@@ -4,7 +4,7 @@
 #include "ILogService.h"
 
 #define ADD_SERVICE(name)            \
-public:                              \
+ public:                             \
   void Add##name(I##name* service) { \
     name##_ = service;               \
   }                                  \
@@ -15,11 +15,11 @@ public:                              \
     return name##_;                  \
   }                                  \
                                      \
-private:                             \
+ private:                            \
   I##name* name##_;
 
 class GameServiceManager {
-public:
+ public:
   static GameServiceManager& getInstance() {
     static GameServiceManager instance;
     return instance;

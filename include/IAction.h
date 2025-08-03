@@ -4,8 +4,10 @@
 // 是不是也可以让行为自己去调用游戏服务来触发一些全局事件
 
 #include <nlohmann/json.hpp>
+
 #include "ISelectableTarget.h"
 #include "ITargetSelector.h"
+
 
 class ISelectableTarget;
 enum class ActionType {
@@ -52,25 +54,19 @@ enum class ActionType {
 };
 
 class IAction : public virtual ITargetSelector {
-public:
+ public:
   IAction(ActionType actionType, std::weak_ptr<ISelectableTarget> from)
       : actionType_(actionType), from_(from) {}
   virtual ~IAction() = default;
-  virtual ActionType getType() {
-    return actionType_;
-  }
-  std::weak_ptr<ISelectableTarget> getFrom() {
-    return from_;
-  }
+  virtual ActionType getType() { return actionType_; }
+  std::weak_ptr<ISelectableTarget> getFrom() { return from_; }
   virtual nlohmann::json toJson() const {
     nlohmann::json ret;
     ret["type"] = static_cast<int>(actionType_);
     ret["from"] = from_.lock()->toJson();
     return ret;
   }
-  std::vector<std::shared_ptr<IAction>>& subActions() {
-    return subActions_;
-  }
+  std::vector<std::shared_ptr<IAction>>& subActions() { return subActions_; }
 
   void addSubAction(std::shared_ptr<IAction> action) {
     subActions_.push_back(std::move(action));
@@ -80,11 +76,9 @@ public:
   }
   // 标志当前事件已经无效化
   // **同时会将后继事件无效化**
-  void invalidate() {
-    actionType_ = ActionType::UNKNOWN;
-  }
+  void invalidate() { actionType_ = ActionType::UNKNOWN; }
 
-private:
+ private:
   ActionType actionType_;
   std::weak_ptr<ISelectableTarget> from_;
   // 后继事件 用于预期紧接当前事件结算的场景

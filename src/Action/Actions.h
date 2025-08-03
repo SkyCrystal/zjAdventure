@@ -1,40 +1,42 @@
 #pragma once
 
+#include <memory>
+
 #include "IAction.h"
 #include "IItem.h"
-
-#include <memory>
 #include "Utils.h"
 
+
 class DamageAction : public IAction {
-public:
-  DamageAction(std::weak_ptr<ISelectableTarget> from) : IAction(ActionType::DAMAGE, from) {}
+ public:
+  DamageAction(std::weak_ptr<ISelectableTarget> from)
+      : IAction(ActionType::DAMAGE, from) {}
   virtual ~DamageAction() = default;
   virtual int getDamage() = 0;
 };
 
 class HurtAction : public IAction, public FixedTarget {
-public:
-  HurtAction(std::weak_ptr<ISelectableTarget> from, std::weak_ptr<ISelectableTarget> me, int damage)
+ public:
+  HurtAction(std::weak_ptr<ISelectableTarget> from,
+             std::weak_ptr<ISelectableTarget> me,
+             int damage)
       : IAction(ActionType::HURT, from), FixedTarget({me}), damage_(damage) {}
   virtual ~HurtAction() = default;
-  virtual int getDamage() {
-    return damage_;
-  }
+  virtual int getDamage() { return damage_; }
 
-private:
+ private:
   int damage_;
 };
 
 class DeathAction : public IAction, public FixedTarget {
-public:
+ public:
   DeathAction(std::weak_ptr<ISelectableTarget> me)
       : IAction(ActionType::DEATH, me), FixedTarget({me}) {}
   virtual ~DeathAction() = default;
 };
 
 class CommonAction : public IAction, public FixedTarget {
-public:
+ public:
   CommonAction(ActionType type, std::weak_ptr<ISelectableTarget> from)
       : IAction(type, from), FixedTarget({}) {}
   virtual ~CommonAction() = default;
@@ -44,33 +46,31 @@ public:
     return j;
   }
 
-public:
+ public:
   int data_ = 0;
 };
 
 class AddItemAction : public IAction, public FixedTarget {
-public:
-  AddItemAction(std::shared_ptr<ISelectableTarget> from, std::shared_ptr<IItem> item)
+ public:
+  AddItemAction(std::shared_ptr<ISelectableTarget> from,
+                std::shared_ptr<IItem> item)
       : IAction(ActionType::ADD_ITEM, from), FixedTarget({item}), item_(item) {}
   virtual ~AddItemAction() = default;
-  std::shared_ptr<IItem> getItem() const {
-    return item_;
-  }
+  std::shared_ptr<IItem> getItem() const { return item_; }
 
-private:
+ private:
   std::shared_ptr<IItem> item_;
 };
 
 class RemoveItemAction : public IAction, public FixedTarget {
-public:
-  RemoveItemAction(std::shared_ptr<ISelectableTarget> from, std::shared_ptr<ISelectableTarget> item)
+ public:
+  RemoveItemAction(std::shared_ptr<ISelectableTarget> from,
+                   std::shared_ptr<ISelectableTarget> item)
       : IAction(ActionType::REMOVE_ITEM, from), FixedTarget({item}) {}
   virtual ~RemoveItemAction() = default;
 
-  int getIndex() const {
-    return index_;
-  }
+  int getIndex() const { return index_; }
 
-private:
+ private:
   int index_;
 };

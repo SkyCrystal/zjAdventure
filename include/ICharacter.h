@@ -12,30 +12,20 @@
 class IItem;
 
 class ICharacter : public virtual IReactable, public ISelectableTarget {
-public:
-  ICharacter(std::string description) : ISelectableTarget(TargetType::CHARACTER, description) {}
+ public:
+  ICharacter(std::string description)
+      : ISelectableTarget(TargetType::CHARACTER, description) {}
   virtual ~ICharacter() = default;
-  int getHealth() const {
-    return health_;
-  }
-  int getAttackPower() const {
-    return attackPower_;
-  }
-  int getDefensePower() const {
-    return defensePower_;
-  }
+  int getHealth() const { return health_; }
+  int getAttackPower() const { return attackPower_; }
+  int getDefensePower() const { return defensePower_; }
   virtual bool isEnemy() const = 0;
-  bool isAlive() const {
-    return alive_;
-  }
-  void setAlive(bool alive) {
-    alive_ = alive;
-  }
-  void addItem(std::shared_ptr<IItem> item) {
-    items_.insert(item);
-  }
+  bool isAlive() const { return alive_; }
+  void setAlive(bool alive) { alive_ = alive; }
+  void addItem(std::shared_ptr<IItem> item) { items_.insert(item); }
   void removeItem(int index) {
-    std::erase_if(items_, [&index](const auto& i) { return i->getIndex() == index; });
+    std::erase_if(items_,
+                  [&index](const auto& i) { return i->getIndex() == index; });
   }
   nlohmann::json toJson() const override {
     nlohmann::json ret = ISelectableTarget::toJson();
@@ -51,7 +41,7 @@ public:
     return ret;
   }
 
-protected:
+ protected:
   int health_;
   int maxHealth_;
   int attackPower_;
