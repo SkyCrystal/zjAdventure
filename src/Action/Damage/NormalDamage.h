@@ -1,12 +1,13 @@
-#include "../Actions.h"
-
 #include <memory>
+
+#include "../Actions.h"
 #include "DamageCalculator.h"
 #include "Logger/Logger.h"
 #include "Utils.h"
 
+
 class NormalDamage : public DamageAction, public TargetFirstEnemy {
-public:
+ public:
   NormalDamage(std::weak_ptr<ISelectableTarget> creator)
       : DamageAction(creator), TargetFirstEnemy(creator) {
     logD() << "NormalDamage::NormalDamage\n";
@@ -14,10 +15,8 @@ public:
         getOwner(getFrom().lock()), 100);
   }
   virtual ~NormalDamage() = default;
-  int getDamage() override {
-    return damage_;
-  }
+  int getDamage() override { return damage_; }
 
-private:
+ private:
   int damage_;
 };

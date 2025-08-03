@@ -3,9 +3,11 @@
 #include <functional>
 #include <memory>
 #include <vector>
+
 #include "IAction.h"
 #include "IReactable.h"
 #include "ISelectableTarget.h"
+
 
 enum class PriorityLevel {
   HIGHEST = -9999,
@@ -21,21 +23,20 @@ enum class PriorityLevel {
   LOWEST = 9999,
 };
 class IItem : public ISelectableTarget, public virtual IReactable {
-public:
+ public:
   IItem(std::string description, PriorityLevel priority)
       : ISelectableTarget(TargetType::ITEM, description), priority_(priority) {}
   virtual ~IItem() = default;
   virtual std::weak_ptr<ISelectableTarget> getOwner() const = 0;
-  PriorityLevel priority() const {
-    return priority_;
-  }
+  PriorityLevel priority() const { return priority_; }
 
-private:
+ private:
   PriorityLevel priority_ = PriorityLevel::NORMAL;  // 优先级
 };
 template <>
 struct std::less<std::shared_ptr<IItem>> {
-  bool operator()(const std::shared_ptr<IItem>& a, const std::shared_ptr<IItem>& b) const {
+  bool operator()(const std::shared_ptr<IItem>& a,
+                  const std::shared_ptr<IItem>& b) const {
     return a->priority() < b->priority();
   }
 };

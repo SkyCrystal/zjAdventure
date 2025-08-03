@@ -1,6 +1,9 @@
-#include <spdlog/spdlog.h>
-#include <cstdio>
 #include "LoggerStream.h"
+
+#include <spdlog/spdlog.h>
+
+#include <cstdio>
+
 #include "Service/GameService.h"
 #include "SpdLogger.h"
 
@@ -35,5 +38,6 @@ void LogStream::log_message(const std::string& msg) {
 }
 
 bool LogStream::should_log() const {
-  return level_ >= GameServiceManager::getInstance().GetLogService()->getLevel();
+  return level_ >=
+         GameServiceManager::getInstance().GetLogService()->getLevel();
 }

@@ -1,4 +1,5 @@
 #include "Character.h"
+
 #include <algorithm>
 #include <iterator>
 #include <memory>
@@ -10,7 +11,11 @@
 #include "Item/NormalAttack.h"
 #include "Service/GameService.h"
 #include "Utils.h"
-Character::Character(std::string description, int health, int attackPower, int defensePower,
+
+Character::Character(std::string description,
+                     int health,
+                     int attackPower,
+                     int defensePower,
                      bool isEnemy)
     : ICharacter(description) {
   health_ = health;
@@ -90,11 +95,14 @@ void Character::onDamage(const std::shared_ptr<IAction>& action) {
   health_ -= damage_value;
   auto hurt_action = std::shared_ptr<HurtAction>(
       new HurtAction(damageAction->getFrom(), weak_from_this(), damage_value));
-  GameServiceManager::getInstance().GetGameService()->postPendingAction(hurt_action);
+  GameServiceManager::getInstance().GetGameService()->postPendingAction(
+      hurt_action);
 
   if (health_ <= 0) {
-    auto death_action = std::shared_ptr<DeathAction>(new DeathAction(weak_from_this()));
-    GameServiceManager::getInstance().GetGameService()->postPendingAction(death_action);
+    auto death_action =
+        std::shared_ptr<DeathAction>(new DeathAction(weak_from_this()));
+    GameServiceManager::getInstance().GetGameService()->postPendingAction(
+        death_action);
   }
 }
 

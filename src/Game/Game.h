@@ -13,7 +13,7 @@
 #include "dllexport.h"
 
 class Game : public IGameService, public ISelectableTarget {
-public:
+ public:
   Game();
   ~Game();
 
@@ -21,24 +21,25 @@ public:
 
   int getCurrentLevel() const override;
   int getCurrentRound() const override;
-  std::vector<std::shared_ptr<ICharacter>> getCurrentCharacters() const override;
-  std::shared_ptr<ICharacter> getFirstEnemy(const std::shared_ptr<ICharacter>& me) const override;
+  std::vector<std::shared_ptr<ICharacter>> getCurrentCharacters()
+      const override;
+  std::shared_ptr<ICharacter> getFirstEnemy(
+      const std::shared_ptr<ICharacter>& me) const override;
   void postPendingAction(const std::shared_ptr<IAction>& action) override;
   void doAction(const std::shared_ptr<IAction>& action);
 
   enum class GameState { BUILD, BEFORE_BATTLE, IN_BATTLE, END };
 
   void update();
-  void addItem(std::shared_ptr<ISelectableTarget> from, std::shared_ptr<IItem> item);
+  void addItem(std::shared_ptr<ISelectableTarget> from,
+               std::shared_ptr<IItem> item);
   void removeItem(std::shared_ptr<ISelectableTarget> from, int index);
 
-  GameState getState() const {
-    return current_state_;
-  }
+  GameState getState() const { return current_state_; }
 
   nlohmann::json getGameStateJson() const;
 
-private:
+ private:
   void onContinuePendingActions();
   std::vector<std::shared_ptr<ICharacter>> current_characters_;
   std::vector<std::weak_ptr<ICharacter>> current_enemies_;

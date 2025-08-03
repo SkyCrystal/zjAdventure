@@ -17,13 +17,13 @@ std::shared_ptr<ICharacter> getOwner(std::shared_ptr<ISelectableTarget> target);
  * 提供生成0到指定范围整数的接口
  */
 class RandomGenerator {
-private:
+ private:
   /**
    * 构造函数，初始化随机数引擎
    */
   RandomGenerator() : engine_(std::random_device{}()) {}
 
-public:
+ public:
   /**
    * 生成0到max之间的随机整数（包含0和max）
    * @param max 随机数的最大值（包含）
@@ -62,29 +62,28 @@ public:
   /**
    * @brief 成功率为rate%的检定
    */
-  static bool check(int rate) {
-    return generateIntExclusive(100) <= rate;
-  }
+  static bool check(int rate) { return generateIntExclusive(100) <= rate; }
 
-private:
+ private:
   std::mt19937 engine_;  // Mersenne Twister随机数引擎
   static RandomGenerator instance_;
 };
 
 class TargetFirstEnemy : public virtual ITargetSelector {
-public:
+ public:
   TargetFirstEnemy(std::weak_ptr<ISelectableTarget> from) : from_(from) {}
   virtual ~TargetFirstEnemy() = default;
 
   std::vector<std::shared_ptr<ISelectableTarget>> getTargets() const override;
 
-private:
+ private:
   std::weak_ptr<ISelectableTarget> from_;
 };
 
 class FixedTarget : public virtual ITargetSelector {
-public:
-  FixedTarget(std::vector<std::weak_ptr<ISelectableTarget>> targets) : targets_(targets) {}
+ public:
+  FixedTarget(std::vector<std::weak_ptr<ISelectableTarget>> targets)
+      : targets_(targets) {}
   virtual ~FixedTarget() = default;
   std::vector<std::shared_ptr<ISelectableTarget>> getTargets() const override {
     std::vector<std::shared_ptr<ISelectableTarget>> ret;
@@ -97,6 +96,6 @@ public:
     return ret;
   }
 
-private:
+ private:
   std::vector<std::weak_ptr<ISelectableTarget>> targets_;
 };

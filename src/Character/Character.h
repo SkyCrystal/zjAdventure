@@ -11,18 +11,20 @@
 
 // 最普通的角色模板
 class Character : public ICharacter {
-public:
-  Character(std::string description, int health, int attackPower, int defensePower, bool isEnemy);
+ public:
+  Character(std::string description,
+            int health,
+            int attackPower,
+            int defensePower,
+            bool isEnemy);
   ~Character() override;
 
-  bool isEnemy() const override {
-    return isEnemy_;
-  }
+  bool isEnemy() const override { return isEnemy_; }
   void onAction(std::shared_ptr<IAction> action) override;
 
   nlohmann::json toJson() const override;
 
-private:
+ private:
   virtual void onGameStart(const std::shared_ptr<IAction>& action);
   virtual void onGameEnd(const std::shared_ptr<IAction>& action) {}
   virtual void onRoundStart(const std::shared_ptr<IAction>& action) {}
