@@ -1,8 +1,9 @@
-#include "LoggerStream.h"
 #include <spdlog/spdlog.h>
 #include <cstdio>
+#include "LoggerStream.h"
 #include "Service/GameService.h"
 #include "SpdLogger.h"
+
 
 LogStream::LogStream(SpdLogger::Level level, const char* file, int line)
     : level_(level), file_(file), line_(line) {}
@@ -15,13 +16,13 @@ LogStream::~LogStream() {
 
 void LogStream::log_message(const std::string& msg) {
   if (msg.empty()) {
-    printf("Log is empty");
+    printf("ERROR: Log is empty");
     return;
   }
 
   auto logger = GameServiceManager::getInstance().GetLogService()->getLogger();
   if (!logger) {
-    printf("No logger");
+    printf("ERROR: No logger");
     return;
   }
 

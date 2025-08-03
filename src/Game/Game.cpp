@@ -1,4 +1,3 @@
-#include "Game.h"
 #include <stdlib.h>
 #include <iostream>
 #include <memory>
@@ -6,12 +5,15 @@
 #include "Action/Actions.h"
 #include "Action/Damage/NormalDamage.h"
 #include "Character/Character.h"
+#include "Game.h"
 #include "IAction.h"
 #include "ISelectableTarget.h"
 #include "Item/NormalAttack.h"
+#include "Logger/Logger.h"
+#include "Logger/SpdLogger.h"
 #include "Service/GameService.h"
 #include "Util/Utils.h"
-#include "Logger/SpdLogger.h"
+
 
 Game::Game()
     : current_state_(GameState::BEFORE_BATTLE),
@@ -22,7 +24,6 @@ Game::Game()
   auto spdLogInstance = new SpdLogger();
   spdLogInstance->init("Log.txt");
   GameServiceManager::getInstance().AddLogService(spdLogInstance);
-  
 }
 
 Game::~Game() {
@@ -50,7 +51,7 @@ void Game::InitPlayer() {
 }
 
 void Game::update() {
-  printf("update\n");
+  logD() << "update";
   if (current_state_ == GameState::BEFORE_BATTLE) {
     // TODO: 触发开始游戏事件
     InitPlayer();
@@ -92,16 +93,16 @@ void Game::doAction(const std::shared_ptr<IAction>& action) {
   }
   auto from = action->getFrom().lock();
   if (!from) {
-    printf("action from is null\n");
+    logE()<<"action from is null\n";
     return;
   }
 
   auto owner = getOwner(from);
   if (owner && !owner->isAlive()) {
-    printf("owner is not alive\n");
+    logE()<<"owner is not alive\n";
     return;
   }
-  printf("action: %d\n", action->getType());
+  logD()<<"action: %d\n", action->getType();
 
   switch (action->getType()) {
     case ActionType::ADD_ITEM: {

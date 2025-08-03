@@ -1,15 +1,15 @@
-#include "SpdLogger.h"
 #include <spdlog/common.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 #include <iostream>
 #include "LoggerStream.h"
+#include "SpdLogger.h"
 
 void SpdLogger::init(const std::string& filename, Level autolevel) {
-  logger_ = spdlog::basic_logger_mt("basic_logger", filename);
+  logger_ = spdlog::basic_logger_mt("ZJ-ADVENTURE-LOGGER", filename);
   logger_->flush_on(spdlog::level::trace);
-  logger_->log(spdlog::level::err, "Hello, {}!", "world");
+  logger_->log(spdlog::level::debug, "Logger setup ready.");
 }
 
 SpdLogger::Level SpdLogger::getLevel() {
