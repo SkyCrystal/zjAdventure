@@ -20,7 +20,7 @@
 #define logD()                                                                                  \
                                                                                                 \
   GameServiceManager::getInstance().GetLogService()->Log(ILogService::Level::Debug, LOG_FILE(), \
-                                                         LOG_LINE(), LOG_FUNCTION());
+                                                         LOG_LINE(), LOG_FUNCTION())
 
 #define logI()                                                                                 \
                                                                                                \
