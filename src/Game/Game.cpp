@@ -102,7 +102,7 @@ void Game::doAction(const std::shared_ptr<IAction>& action) {
     logE()<<"owner is not alive\n";
     return;
   }
-  logD()<<"action: %d\n", action->getType();
+  logD() << "action: " << action->getType();
 
   switch (action->getType()) {
     case ActionType::ADD_ITEM: {

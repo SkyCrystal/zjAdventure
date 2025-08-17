@@ -1,6 +1,8 @@
 #pragma once
 #include <spdlog/spdlog.h>
 #include <sstream>
+#include <type_traits>
+
 #include "ILogService.h"
 
 class LogStream {
@@ -13,7 +15,11 @@ public:
   template <typename T>
   LogStream& operator<<(const T& value) {
     if (should_log()) {
-      stream_ << value;
+      if constexpr (std::is_enum_v<T>) {
+        stream_ << static_cast<std::underlying_type_t<T>>(value);
+      } else {
+        stream_ << value;
+      }
     }
     return *this;
   }
