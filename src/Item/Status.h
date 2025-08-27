@@ -28,10 +28,11 @@ class Status : public Item {
 class IStatusCountDown {
  public:
   virtual bool canContinue(std::shared_ptr<IAction> action, Status& status) = 0;
+  virtual ~IStatusCountDown() = default;
 };
 
 class DecreaseByRound : public IStatusCountDown {
  public:
-  virtual bool canContinue(std::shared_ptr<IAction> action,
-                           Status& status) override;
+  bool canContinue(std::shared_ptr<IAction> action, Status& status) override;
+  ~DecreaseByRound() override = default;
 };

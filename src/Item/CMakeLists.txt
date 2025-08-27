@@ -5,9 +5,11 @@ cmake_minimum_required(VERSION 3.16)
 project(Item VERSION 1.0 LANGUAGES CXX)
 
 file(GLOB_RECURSE ITEM_SOURCES "*.cpp")
+file(GLOB_RECURSE ITEM_STATUS_SOURCES "Status/*.cpp")
 file(GLOB_RECURSE ITEM_HEADERS "*.h")
+file(GLOB_RECURSE ITEM_STATUS_HEADERS "Status/*.h")
 
-add_library(${PROJECT_NAME} STATIC ${ITEM_SOURCES})
+add_library(${PROJECT_NAME} STATIC ${ITEM_SOURCES} ${ITEM_STATUS_SOURCES})
 
 find_package(nlohmann_json REQUIRED)
 
