@@ -1,6 +1,7 @@
+#pragma once
+
 #include "IItem.h"
-#include "ISelectableTarget.h"
-#include "Utils.h"
+
 
 class Item : public IItem {
  public:
@@ -16,6 +17,7 @@ class Item : public IItem {
     nlohmann::json ret = ISelectableTarget::toJson();
     return ret;
   }
+  virtual void selfErase();
 
  private:
   std::weak_ptr<ISelectableTarget> owner_;

@@ -6,7 +6,6 @@
 #include "IItem.h"
 #include "Utils.h"
 
-
 class DamageAction : public IAction {
  public:
   DamageAction(std::weak_ptr<ISelectableTarget> from)
@@ -66,7 +65,9 @@ class RemoveItemAction : public IAction, public FixedTarget {
  public:
   RemoveItemAction(std::shared_ptr<ISelectableTarget> from,
                    std::shared_ptr<ISelectableTarget> item)
-      : IAction(ActionType::REMOVE_ITEM, from), FixedTarget({item}) {}
+      : IAction(ActionType::REMOVE_ITEM, from),
+        FixedTarget({item}),
+        index_(item->getIndex()) {}
   virtual ~RemoveItemAction() = default;
 
   int getIndex() const { return index_; }

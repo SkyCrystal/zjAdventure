@@ -29,6 +29,7 @@ class IItem : public ISelectableTarget, public virtual IReactable {
   virtual ~IItem() = default;
   virtual std::weak_ptr<ISelectableTarget> getOwner() const = 0;
   PriorityLevel priority() const { return priority_; }
+  virtual void selfErase() = 0;
 
  private:
   PriorityLevel priority_ = PriorityLevel::NORMAL;  // 优先级
