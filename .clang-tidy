@@ -8,4 +8,5 @@ Checks: '*,
 -modernize-use-trailing-return-type,
 -fuchsia-default-arguments-calls,
 -altera-unroll-loops,
+-cppcoreguidelines-pro-bounds-pointer-arithmetic,
 -hicpp-no-malloc'
