@@ -1,9 +1,8 @@
 #include <vector>
 
 #include "IAction.h"
-#include "Item.h"
+#include "Item/Item.h"
 #include "Logger/Logger.h"
-
 
 class NormalAttack : public Item {
  public:

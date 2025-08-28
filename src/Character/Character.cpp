@@ -8,7 +8,7 @@
 #include "Game/Game.h"
 #include "IAction.h"
 #include "ICharacter.h"
-#include "Item/NormalAttack.h"
+#include "Item/Attack/NormalAttack.h"
 #include "Service/GameService.h"
 #include "Utils.h"
 

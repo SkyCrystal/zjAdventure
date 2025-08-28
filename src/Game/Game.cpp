@@ -11,7 +11,7 @@
 #include "Character/Character.h"
 #include "IAction.h"
 #include "ISelectableTarget.h"
-#include "Item/NormalAttack.h"
+#include "Item/Attack/NormalAttack.h"
 #include "Logger/Logger.h"
 #include "Logger/SpdLogger.h"
 #include "Service/GameService.h"
