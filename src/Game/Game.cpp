@@ -60,7 +60,7 @@ void Game::update() {
     // TODO: 触发开始游戏事件
     InitPlayer();
     auto game_start = std::shared_ptr<CommonAction>(
-        new CommonAction(ActionType::BATTLE_START, weak_from_this()));
+        new CommonAction(ActionType::BATTLE_START, weak_from_this(), {}));
     pending_actions_.push(std::move(game_start));
 
     onContinuePendingActions();
@@ -74,7 +74,7 @@ void Game::update() {
   // 游戏逻辑更新
 
   auto round_start = std::shared_ptr<CommonAction>(
-      new CommonAction(ActionType::ROUND_START, weak_from_this()));
+      new CommonAction(ActionType::ROUND_START, weak_from_this(), {}));
   round_start->data_ = ++turn_count_;
   pending_actions_.push(std::move(round_start));
   onContinuePendingActions();
@@ -83,8 +83,8 @@ void Game::update() {
     if (!character->isAlive()) {
       continue;
     }
-    auto turn_start = std::shared_ptr<CommonAction>(
-        new CommonAction(ActionType::TURN_START, character));
+    auto turn_start = std::shared_ptr<CommonAction>(new CommonAction(
+        ActionType::TURN_START, weak_from_this(), {character}));
     turn_start->data_ = turn_count_;
     pending_actions_.push(std::move(turn_start));
     onContinuePendingActions();

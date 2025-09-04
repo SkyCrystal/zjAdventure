@@ -1,8 +1,10 @@
-#include "IAction.h"
-#include "Logger/Logger.h"
 #include "Stun.h"
 
-void Stun::onActionImpl(std::shared_ptr<IAction> action) {
+#include "IAction.h"
+#include "Logger/Logger.h"
+
+
+void Stun::onActionImpl(const std::shared_ptr<IAction>& action) {
   switch (action->getType()) {
     case ActionType::TURN_START: {
       auto target = action->getTargets();

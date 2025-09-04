@@ -1,25 +1,15 @@
 #include "NormalAttack.h"
 
+#include <memory>
+
 #include "Action/Damage/NormalDamage.h"
 #include "IAction.h"
 #include "Logger/Logger.h"
 #include "Service/GameService.h"
 
-
-void NormalAttack::onAction(std::shared_ptr<IAction> action) {
-  switch (action->getType()) {
-    case ActionType::TURN_START: {
-      logD() << "NormalAttack::onAction\n";
-      if (getOwner().lock()->getIndex() ==
-          action->getFrom().lock()->getIndex()) {
-        logD() << "NormalAttack::onAction::NormalDamage\n";
-        GameServiceManager::getInstance().GetGameService()->postPendingAction(
-            std::shared_ptr<NormalDamage>(new NormalDamage(getOwner())));
-      }
-    }
-    default:
-      return;
-  }
+void NormalAttack::onActionTriggered(const std::shared_ptr<IAction>& action) {
+  logD() << "NormalAttack::onAction::NormalDamage\n";
+  action->addSubAction(std::make_shared<NormalDamage>(getOwner()));
 }
 
 nlohmann::json NormalAttack::toJson() const {

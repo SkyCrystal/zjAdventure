@@ -25,3 +25,5 @@ std::vector<std::shared_ptr<ISelectableTarget>> TargetFirstEnemy::getTargets()
   }
   return {};
 }
+
+RandomGenerator RandomGenerator::instance_ = RandomGenerator();

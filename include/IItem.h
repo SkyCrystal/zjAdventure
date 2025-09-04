@@ -8,7 +8,6 @@
 #include "IReactable.h"
 #include "ISelectableTarget.h"
 
-
 enum class PriorityLevel {
   HIGHEST = -9999,
 
@@ -19,12 +18,13 @@ enum class PriorityLevel {
   CHARACTER_ACTION = 1,
 
   LOW = 100,
+  EVENT_LISTENER = 101,
 
   LOWEST = 9999,
 };
 class IItem : public ISelectableTarget, public virtual IReactable {
  public:
-  IItem(std::string description, PriorityLevel priority)
+  IItem(const std::string& description, PriorityLevel priority)
       : ISelectableTarget(TargetType::ITEM, description), priority_(priority) {}
   virtual ~IItem() = default;
   virtual std::weak_ptr<ISelectableTarget> getOwner() const = 0;

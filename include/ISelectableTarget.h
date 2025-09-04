@@ -15,7 +15,7 @@ enum class TargetType {
 class ISelectableTarget
     : public std::enable_shared_from_this<ISelectableTarget> {
  public:
-  ISelectableTarget(TargetType targetType, std::string description)
+  ISelectableTarget(TargetType targetType, const std::string& description)
       : index_(GetNextIndex()),
         targetType_(targetType),
         description_(description) {}

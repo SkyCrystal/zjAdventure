@@ -42,6 +42,10 @@ target_link_libraries(zjAdventure PRIVATE
     nlohmann_json::nlohmann_json
     spdlog::spdlog
     Game
+    Character
+    Item
+    Logger
+    Util
 )
 
 # 添加子目录

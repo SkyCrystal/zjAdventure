@@ -1,10 +1,11 @@
+#include "Status.h"
+
 #include <memory>
 
 #include "IAction.h"
 #include "Logger/Logger.h"
-#include "Status.h"
 
-bool DecreaseByRound::canContinue(std::shared_ptr<IAction> action,
+bool DecreaseByRound::canContinue(const std::shared_ptr<IAction>& action,
                                   Status& status) {
   switch (action->getType()) {
     case ActionType::ROUND_END: {
@@ -21,7 +22,7 @@ bool DecreaseByRound::canContinue(std::shared_ptr<IAction> action,
   }
 }
 
-void Status::onAction(std::shared_ptr<IAction> action) {
+void Status::onActionTriggered(const std::shared_ptr<IAction>& action) {
   onActionImpl(action);
   if (!count_down_->canContinue(action, *this)) {
     logI() << "Status " << getDescription() << " is expired";

@@ -1,6 +1,7 @@
 #pragma once
-#include <cstddef>
+
 #include <memory>
+#include <type_traits>
 #include <vector>
 
 #include "IAction.h"
@@ -9,15 +10,95 @@
 class Trigger;
 class Condition {
  public:
-  virtual bool canTrigger(std::shared_ptr<IAction> action, ICharacter* on) = 0;
+  virtual bool canTrigger(const std::shared_ptr<IAction>& action,
+                          ICharacter* on) = 0;
 };
+
 template <bool result>
-class AlwaysAt : public Condition {
+class Always : public Condition {
  public:
-  bool canTrigger(std::shared_ptr<IAction> /*action*/,
-                  ICharacter* /*on*/) override {
+  bool canTrigger(const std::shared_ptr<IAction>& action,
+                  ICharacter* on) override {
     return result;
   }
+};
+
+class WhenRoundStart : public Condition {
+  bool canTrigger(const std::shared_ptr<IAction>& action,
+                  ICharacter* on) override {
+    return action->getType() == ActionType::ROUND_START;
+  }
+};
+
+class WhenRoundEnd : public Condition {
+  bool canTrigger(const std::shared_ptr<IAction>& action,
+                  ICharacter* on) override {
+    return action->getType() == ActionType::ROUND_END;
+  }
+};
+
+class WhenMyTurnStart : public Condition {
+  bool canTrigger(const std::shared_ptr<IAction>& action,
+                  ICharacter* on) override {
+    return action->getType() == ActionType::TURN_START &&
+           action->getTargets().size() == 1 &&
+           action->getTargets()[0]->getIndex() == on->getIndex();
+  };
+};
+
+class WhenMyTurnEnd : public Condition {
+  bool canTrigger(const std::shared_ptr<IAction>& action,
+                  ICharacter* on) override {
+    return action->getType() == ActionType::TURN_END &&
+           action->getTargets().size() == 1 &&
+           action->getTargets()[0]->getIndex() == on->getIndex();
+  };
+};
+
+class WhenEnemyTurnStart : public Condition {
+  bool canTrigger(const std::shared_ptr<IAction>& action,
+                  ICharacter* on) override {
+    return action->getType() == ActionType::TURN_START &&
+           action->getTargets().size() == 1 &&
+           std::reinterpret_pointer_cast<ICharacter>(action->getTargets()[0])
+                   ->isEnemy() != on->isEnemy();
+  };
+};
+
+class WhenEnemyTurnEnd : public Condition {
+  bool canTrigger(const std::shared_ptr<IAction>& action,
+                  ICharacter* on) override {
+    return action->getType() == ActionType::TURN_END &&
+           action->getTargets().size() == 1 &&
+           std::reinterpret_pointer_cast<ICharacter>(action->getTargets()[0])
+                   ->isEnemy() != on->isEnemy();
+  };
+};
+
+class FixedPossibility : public Condition {
+ public:
+  FixedPossibility(double possibility) : possibility_(possibility) {}
+  bool canTrigger(const std::shared_ptr<IAction>& action,
+                  ICharacter* on) override;
+
+ private:
+  double possibility_;
+};
+
+class CalculatedPossibility : public Condition {
+ public:
+  CalculatedPossibility(
+      std::function<double(std::shared_ptr<IAction>, ICharacter*)> possibility)
+      : possibility_(std::move(possibility)) {}
+  CalculatedPossibility(std::function<double()> possibility) {
+    possibility_ = [possibility](const std::shared_ptr<IAction>& action,
+                                 ICharacter* on) { return possibility(); };
+  }
+  bool canTrigger(const std::shared_ptr<IAction>& action,
+                  ICharacter* on) override;
+
+ private:
+  std::function<double(std::shared_ptr<IAction>, ICharacter*)> possibility_;
 };
 
 class Trigger {
@@ -26,16 +107,15 @@ class Trigger {
   Trigger& operator=(Trigger&& other) noexcept;
 
   explicit Trigger() : type_(TriggerType::CONDITION) {
-    condition_ = std::make_unique<AlwaysAt<true>>();
+    condition_ = std::make_unique<Always<true>>();
   }
 
   Trigger(std::unique_ptr<Condition> condition);
 
   template <typename T>
     requires std::is_base_of_v<Condition, T>
-  Trigger(T&& condition) {
-    Trigger(std::make_unique<T>(std::forward<T>(condition)));
-  }
+  Trigger(T&& condition)
+      : Trigger(std::make_unique<T>(std::forward<T>(condition))) {}
   enum class TriggerType {
     UNKNOWN,
     AND,
@@ -51,7 +131,7 @@ class Trigger {
   virtual ~Trigger() = default;
 
  public:
-  bool canTrigger(std::shared_ptr<IAction> action, ICharacter* on);
+  bool canTrigger(const std::shared_ptr<IAction>& action, ICharacter* on) const;
 
  private:
   TriggerType type_ = TriggerType::UNKNOWN;
@@ -67,8 +147,3 @@ Trigger operator!(Trigger&& a);
 
 Trigger operator&&(Trigger&& a, Trigger&& b);
 Trigger operator||(Trigger&& a, Trigger&& b);
-
-void test() {
-  auto t2 = Trigger(AlwaysAt<true>());
-  auto t3 = AlwaysAt<true>() || AlwaysAt<false>();
-}

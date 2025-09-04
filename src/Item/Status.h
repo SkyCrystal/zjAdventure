@@ -8,13 +8,13 @@ class Status : public Item {
   friend class DecreaseByRound;
 
  public:
-  Status(const std::string& description, std::weak_ptr<ISelectableTarget> owner)
+  Status(const std::string& description, std::weak_ptr<ICharacter> owner)
       : Item(description, owner, PriorityLevel::CHARACTER_STATUS) {}
   virtual ~Status() = default;
   // 处理剩余回合数相关的逻辑
-  void onAction(std::shared_ptr<IAction> action) final;
+  void onActionTriggered(const std::shared_ptr<IAction>& action) final;
   // 处理具体的状态
-  virtual void onActionImpl(std::shared_ptr<IAction> action) = 0;
+  virtual void onActionImpl(const std::shared_ptr<IAction>& action) = 0;
   nlohmann::json toJson() const override;
 
  protected:
@@ -27,12 +27,14 @@ class Status : public Item {
 
 class IStatusCountDown {
  public:
-  virtual bool canContinue(std::shared_ptr<IAction> action, Status& status) = 0;
+  virtual bool canContinue(const std::shared_ptr<IAction>& action,
+                           Status& status) = 0;
   virtual ~IStatusCountDown() = default;
 };
 
 class DecreaseByRound : public IStatusCountDown {
  public:
-  bool canContinue(std::shared_ptr<IAction> action, Status& status) override;
+  bool canContinue(const std::shared_ptr<IAction>& action,
+                   Status& status) override;
   ~DecreaseByRound() override = default;
 };

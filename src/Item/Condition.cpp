@@ -1,5 +1,10 @@
 #include "Condition.h"
 
+#include <algorithm>
+
+#include "Logger/Logger.h"
+#include "Utils.h"
+
 Trigger operator!(Trigger&& a) {
   return Trigger(Trigger::TriggerType::NOT, std::move(a));
 }
@@ -37,4 +42,41 @@ Trigger::Trigger(std::unique_ptr<Condition> condition)
 
 Trigger::Trigger(TriggerType type, Trigger&& condition) noexcept : type_(type) {
   subTriggers_.push_back(std::move(condition));
+}
+
+bool Trigger::canTrigger(const std::shared_ptr<IAction>& action,
+                         ICharacter* on) const {
+  switch (type_) {
+    case TriggerType::AND: {
+      return std::ranges::all_of(subTriggers_,
+                                 [action, on](const auto& subTrigger) {
+                                   return subTrigger.canTrigger(action, on);
+                                 });
+    }
+    case TriggerType::OR: {
+      return std::ranges::any_of(subTriggers_,
+                                 [action, on](const auto& subTrigger) {
+                                   return subTrigger.canTrigger(action, on);
+                                 });
+    }
+    case TriggerType::NOT: {
+      return !subTriggers_[0].canTrigger(action, on);
+    }
+    case TriggerType::CONDITION: {
+      return condition_->canTrigger(action, on);
+    }
+    default: {
+      return false;
+    }
+  }
+}
+
+bool FixedPossibility::canTrigger(const std::shared_ptr<IAction>& action,
+                                  ICharacter* on) {
+  return RandomGenerator::generateDouble() < possibility_;
+}
+
+bool CalculatedPossibility::canTrigger(const std::shared_ptr<IAction>& action,
+                                       ICharacter* on) {
+  return RandomGenerator::generateDouble() < possibility_(action, on);
 }

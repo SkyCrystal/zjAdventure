@@ -6,10 +6,10 @@
 
 class NormalAttack : public Item {
  public:
-  NormalAttack(std::weak_ptr<ISelectableTarget> owner)
+  NormalAttack(std::weak_ptr<ICharacter> owner)
       : Item("NormalAttack", owner, PriorityLevel::CHARACTER_ACTION) {
     logD() << "NormalAttack::NormalAttack of " << owner.lock()->getIndex();
   }
-  void onAction(std::shared_ptr<IAction> action) override;
+  void onActionTriggered(const std::shared_ptr<IAction>& action) override;
   nlohmann::json toJson() const override;
 };

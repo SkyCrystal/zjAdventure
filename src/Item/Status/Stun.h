@@ -4,9 +4,9 @@
 
 class Stun : public Status {
  public:
-  Stun(std::weak_ptr<ISelectableTarget> owner) : Status("Stun", owner) {}
+  Stun(std::weak_ptr<ICharacter> owner) : Status("Stun", owner) {}
   virtual ~Stun() = default;
 
  private:
-  void onActionImpl(std::shared_ptr<IAction> action) override;
+  void onActionImpl(const std::shared_ptr<IAction>& action) override;
 };

@@ -36,8 +36,10 @@ class DeathAction : public IAction, public FixedTarget {
 
 class CommonAction : public IAction, public FixedTarget {
  public:
-  CommonAction(ActionType type, std::weak_ptr<ISelectableTarget> from)
-      : IAction(type, from), FixedTarget({}) {}
+  CommonAction(ActionType type,
+               std::weak_ptr<ISelectableTarget> from,
+               const std::vector<std::weak_ptr<ISelectableTarget>>& targets)
+      : IAction(type, from), FixedTarget(targets) {}
   virtual ~CommonAction() = default;
   nlohmann::json toJson() const override {
     nlohmann::json j = IAction::toJson();

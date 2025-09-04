@@ -66,6 +66,7 @@ class RandomGenerator {
 
  private:
   std::mt19937 engine_;  // Mersenne Twister随机数引擎
+ public:
   static RandomGenerator instance_;
 };
 
@@ -82,7 +83,7 @@ class TargetFirstEnemy : public virtual ITargetSelector {
 
 class FixedTarget : public virtual ITargetSelector {
  public:
-  FixedTarget(std::vector<std::weak_ptr<ISelectableTarget>> targets)
+  FixedTarget(const std::vector<std::weak_ptr<ISelectableTarget>>& targets)
       : targets_(targets) {}
   virtual ~FixedTarget() = default;
   std::vector<std::shared_ptr<ISelectableTarget>> getTargets() const override {
