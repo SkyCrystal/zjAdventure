@@ -22,12 +22,6 @@ class AlwaysAt : public Condition {
 
 class Trigger {
  public:
-  template <typename T, typename... Args>
-    requires std::is_base_of_v<Condition, T>
-  static Trigger When(Args&&... args) {
-    return Trigger(std::make_unique<T>(std::forward<Args>(args)...));
-  }
-
   Trigger(Trigger&& other) noexcept;
   Trigger& operator=(Trigger&& other) noexcept;
 
@@ -75,7 +69,6 @@ Trigger operator&&(Trigger&& a, Trigger&& b);
 Trigger operator||(Trigger&& a, Trigger&& b);
 
 void test() {
-  auto trigger = !(Trigger::When<AlwaysAt<true>>() || AlwaysAt<false>());
   auto t2 = Trigger(AlwaysAt<true>());
   auto t3 = AlwaysAt<true>() || AlwaysAt<false>();
 }
