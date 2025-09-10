@@ -5,6 +5,7 @@
 
 #include "IItem.h"
 #include "Item/Attack/NormalAttack.h"
+#include "Service/GameService.h"
 
 namespace {
 using CreateItemFunction =
@@ -85,4 +86,22 @@ std::shared_ptr<IItem> ItemManager::MakeItem(const std::string& itemName,
   }
 
   return item_constructors_[itemName](std::move(owner), context);
+}
+
+std::shared_ptr<AddItemAction> ItemManager::MakeAddItemAction(
+    std::shared_ptr<ISelectableTarget> from,
+    const std::string& itemName,
+    std::shared_ptr<ICharacter> owner,
+    const Context& context) {
+  return std::make_shared<AddItemAction>(std::move(from),
+                                         MakeItem(itemName, owner, context));
+}
+
+void ItemManager::PostAddItemAction(std::shared_ptr<ISelectableTarget> from,
+                                    const std::string& itemName,
+                                    std::shared_ptr<ICharacter> owner,
+                                    const Context& context) {
+  auto addItemAction = MakeAddItemAction(from, itemName, owner, context);
+  GameServiceManager::getInstance().GetGameService()->postPendingAction(
+      addItemAction);
 }

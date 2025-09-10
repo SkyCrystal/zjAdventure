@@ -38,9 +38,21 @@ class ItemConstructor {
 class ItemManager {
  public:
   static ItemManager* getInstance();
+  // 创建物品
   std::shared_ptr<IItem> MakeItem(const std::string& itemName,
                                   std::shared_ptr<ICharacter> owner,
                                   const Context& context);
+  // 创建添加物品事件
+  std::shared_ptr<AddItemAction> MakeAddItemAction(
+      std::shared_ptr<ISelectableTarget> from,
+      const std::string& itemName,
+      std::shared_ptr<ICharacter> owner,
+      const Context& context);
+  // 直接添加物品
+  void PostAddItemAction(std::shared_ptr<ISelectableTarget> from,
+                         const std::string& itemName,
+                         std::shared_ptr<ICharacter> owner,
+                         const Context& context);
 
  private:
   ItemManager();

@@ -41,18 +41,15 @@ void Game::InitPlayer() {
       std::shared_ptr<Character>(new Character("Player", 100, 20, 5, false));
   current_characters_.push_back(player);
   current_players_.push_back(player);
-  auto item =
-      ItemManager::getInstance()->MakeItem("NormalAttack", player, Context());
-  pending_actions_.push(std::shared_ptr<IAction>(
-      new AddItemAction(shared_from_this(), std::move(item))));
+  ItemManager::getInstance()->PostAddItemAction(
+      shared_from_this(), "NormalAttack", player, Context());
 
   auto enemy =
       std::shared_ptr<Character>(new Character("Enemy", 100, 10, 5, true));
   current_characters_.push_back(enemy);
   current_enemies_.push_back(enemy);
-  item = ItemManager::getInstance()->MakeItem("NormalAttack", enemy, Context());
-  pending_actions_.push(std::shared_ptr<IAction>(
-      new AddItemAction(shared_from_this(), std::move(item))));
+  ItemManager::getInstance()->PostAddItemAction(
+      shared_from_this(), "NormalAttack", enemy, Context());
 
   onContinuePendingActions();
 }
