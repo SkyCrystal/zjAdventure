@@ -13,19 +13,16 @@ using CreateItemFunction =
                                          const Context&)>;
 
 template <typename T, typename... Args>
-  requires std::is_base_of_v<IItem, T>
+  requires std::is_base_of_v<IItem, T> && requires(Args... args) {
+    { T(std::forward<Args>(args)...) };
+  }
 std::shared_ptr<IItem> CreateItem(Args&&... args) {
   return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
 // 模板函数：接受参数包Args，将每个Arg::get()的返回值作为参数传递给CreateItem
 template <typename T, typename... Args>
-  requires std::is_base_of_v<IItem, T> && requires(Args... args) {
-    {
-      T(std::declval<std::shared_ptr<ICharacter>>(),
-        std::forward<Args>(args)...)
-    };
-  }
+  requires std::is_base_of_v<IItem, T>
 std::shared_ptr<IItem> CreateItemWithContext(std::shared_ptr<ICharacter> owner,
                                              const Context& context) {
   return CreateItem<T>(owner, Args::Get(context)...);
