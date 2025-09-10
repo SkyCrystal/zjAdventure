@@ -78,7 +78,7 @@ ItemManager* ItemManager::getInstance() {
 std::shared_ptr<IItem> ItemManager::MakeItem(const std::string& itemName,
                                              std::shared_ptr<ICharacter> owner,
                                              const Context& context) {
-  if (item_constructors_.find(itemName) == item_constructors_.end()) {
+  if (!item_constructors_.contains(itemName)) {
     throw std::runtime_error("Item " + itemName + " not found");
   }
 
