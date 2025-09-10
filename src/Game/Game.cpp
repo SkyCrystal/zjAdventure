@@ -12,6 +12,7 @@
 #include "IAction.h"
 #include "ISelectableTarget.h"
 #include "Item/Attack/NormalAttack.h"
+#include "ItemManager.h"
 #include "Logger/Logger.h"
 #include "Logger/SpdLogger.h"
 #include "Service/GameService.h"
@@ -26,6 +27,7 @@ Game::Game()
   auto spdLogInstance = new SpdLogger();
   spdLogInstance->init("Log.txt");
   GameServiceManager::getInstance().AddLogService(spdLogInstance);
+  ItemManager::getInstance();
 }
 
 Game::~Game() {
@@ -39,7 +41,8 @@ void Game::InitPlayer() {
       std::shared_ptr<Character>(new Character("Player", 100, 20, 5, false));
   current_characters_.push_back(player);
   current_players_.push_back(player);
-  auto item = std::shared_ptr<IItem>(new NormalAttack(player));
+  auto item =
+      ItemManager::getInstance()->MakeItem("NormalAttack", player, Context());
   pending_actions_.push(std::shared_ptr<IAction>(
       new AddItemAction(shared_from_this(), std::move(item))));
 
@@ -47,7 +50,7 @@ void Game::InitPlayer() {
       std::shared_ptr<Character>(new Character("Enemy", 100, 10, 5, true));
   current_characters_.push_back(enemy);
   current_enemies_.push_back(enemy);
-  item = std::shared_ptr<IItem>(new NormalAttack(enemy));
+  item = ItemManager::getInstance()->MakeItem("NormalAttack", enemy, Context());
   pending_actions_.push(std::shared_ptr<IAction>(
       new AddItemAction(shared_from_this(), std::move(item))));
 
