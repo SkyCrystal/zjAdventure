@@ -4,3 +4,5 @@ build
 bin
 */.DS_Store
 .vs
+CMakeFiles
+CMakeCache.txt
