@@ -48,16 +48,18 @@ bool Trigger::canTrigger(const std::shared_ptr<IAction>& action,
                          ICharacter* on) const {
   switch (type_) {
     case TriggerType::AND: {
-      return std::ranges::all_of(subTriggers_,
-                                 [action, on](const auto& subTrigger) {
-                                   return subTrigger.canTrigger(action, on);
-                                 });
+      bool ret = true;
+      for (const auto& subTrigger : subTriggers_) {
+        ret &= subTrigger.canTrigger(action, on);
+      }
+      return ret;
     }
     case TriggerType::OR: {
-      return std::ranges::any_of(subTriggers_,
-                                 [action, on](const auto& subTrigger) {
-                                   return subTrigger.canTrigger(action, on);
-                                 });
+      bool ret = false;
+      for (const auto& subTrigger : subTriggers_) {
+        ret |= subTrigger.canTrigger(action, on);
+      }
+      return ret;
     }
     case TriggerType::NOT: {
       return !subTriggers_[0].canTrigger(action, on);
